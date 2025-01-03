@@ -20,7 +20,7 @@ This project demonstrates a pixel grouped bar chart display using Rust.
     ```
 2. Navigate to the project directory:
     ```sh
-    cd dataviz-examples/pixelgroupedbarchartdisplay
+    cd dataviz-examples/<example-project>
     ```
 3. Build the project:
     ```sh
