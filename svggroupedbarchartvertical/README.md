@@ -1,6 +1,6 @@
-# Pixel Grouped Bar Chart Display
+# SVG Grouped Bar Chart Display
 
-This project demonstrates a pixel grouped bar chart display using Rust.
+This project demonstrates a SVG grouped bar chart display using Rust.
 
 ## Features
 
@@ -10,9 +10,7 @@ This project demonstrates a pixel grouped bar chart display using Rust.
 
 ## Screenshots
 
-<img src="./screenshots/interactivedisplay.png" alt="" width="600px">
-
-<img src="./screenshots/realtimedisplay.gif" alt="" width="600px">
+<img src="./screenshots/grouped_vertical_bar_chart.svg" alt="" width="600px">
 
 ## Installation
 
