@@ -21,10 +21,10 @@ fn main() {
         num_axis_ticks: 20,          // Number of axis tick marks
         num_grid_horizontal: 20,     // Number of horizontal grid lines
         num_grid_vertical: 20,       // Number of vertical grid lines
-        font_label: "C:/Users/samet/Desktop/Rust/rust-lab/dataviz/resources/fonts/Arial.ttf"
-            .to_string(), // Path to the font for axis labels
-        font_title: "C:/Users/samet/Desktop/Rust/rust-lab/dataviz/resources/fonts/Arial.ttf"
-            .to_string(), // Path to the font for the title
+        font_label: Some("C:/Users/samet/Desktop/Rust/rust-lab/dataviz/resources/fonts/Arial.ttf"
+        .to_string()), // Path to the font for axis labels
+        font_title: Some("C:/Users/samet/Desktop/Rust/rust-lab/dataviz/resources/fonts/Arial.ttf"
+        .to_string()), // Path to the font for the title
     };
 
     // Create a grouped bar chart with the given configuration
