@@ -1,0 +1,8 @@
+[package]
+name = "pixelquadrant1graphdisplay"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+dataviz = "0.1.7"
+rand = "0.8.5"

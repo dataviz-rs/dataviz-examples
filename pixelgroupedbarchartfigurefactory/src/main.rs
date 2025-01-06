@@ -14,8 +14,8 @@ fn main() {
     // Dereference the Box and use downcast_mut
     if let Some(group_bar_chart) = figure.as_any().downcast_mut::<GroupBarChart>() {
         group_bar_chart.config.set_font_paths(
-            "C:/Users/samet/Desktop/Rust/rust-lab/dataviz/resources/fonts/Arial.ttf".to_string(),
-            "C:/Users/samet/Desktop/Rust/rust-lab/dataviz/resources/fonts/Arial.ttf".to_string(),
+            "path/to/dataviz/resources/fonts/Arial.ttf".to_string(),
+            "path/to/dataviz/resources/fonts/Arial.ttf".to_string(),
         );
 
         // Create a SVG canvas for rendering the chart

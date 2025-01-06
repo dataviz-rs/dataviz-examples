@@ -24,10 +24,10 @@ fn main() {
         num_grid_horizontal: 20,     // Set number of horizontal grid lines
         num_grid_vertical: 20,       // Set number of vertical grid lines
         font_label: Some(
-            "C:/Users/samet/Desktop/Rust/rust-lab/dataviz/resources/fonts/Arial.ttf".to_string(),
+            "path/to/dataviz/resources/fonts/Arial.ttf".to_string(),
         ), // Path to font file for axis labels
         font_title: Some(
-            "C:/Users/samet/Desktop/Rust/rust-lab/dataviz/resources/fonts/Arial.ttf".to_string(),
+            "path/to/dataviz/resources/fonts/Arial.ttf".to_string(),
         ), // Path to font file for the title
     };
 
