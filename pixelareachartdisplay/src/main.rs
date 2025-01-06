@@ -24,10 +24,10 @@ fn main() {
         num_grid_horizontal: 20,     // Set number of horizontal grid lines
         num_grid_vertical: 20,       // Set number of vertical grid lines
         font_label: Some(
-            "C:/Users/samet/Desktop/Rust/rust-lab/dataviz/resources/fonts/Arial.ttf".to_string(),
+            "path/to/dataviz/resources/fonts/Arial.ttf".to_string(),
         ), // Path to font file for axis labels
         font_title: Some(
-            "C:/Users/samet/Desktop/Rust/rust-lab/dataviz/resources/fonts/Arial.ttf".to_string(),
+            "path/to/dataviz/resources/fonts/Arial.ttf".to_string(),
         ), // Path to font file for the title
     };
 
@@ -81,8 +81,7 @@ fn main() {
     let mut rng = rand::thread_rng();
     let update_data = move |chart: &mut AreaChart| {
         for i in 0..chart.datasets.len() {
-            for point in chart.datasets[i].data.iter_mut() {
-                point.0 += 1.0; // Increment x-value
+            for point in chart.datasets[i].points.iter_mut() {
                 point.1 += rng.gen_range(0.0..2.0); // Increment y-value
             }
         }

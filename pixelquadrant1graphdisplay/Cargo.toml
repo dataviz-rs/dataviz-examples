@@ -1,5 +1,5 @@
 [package]
-name = "pixelhistogram"
+name = "pixelquadrant1graphdisplay"
 version = "0.1.0"
 edition = "2021"
 

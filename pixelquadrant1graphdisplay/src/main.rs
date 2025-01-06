@@ -1,9 +1,10 @@
 use dataviz::figure::{
-    canvas::svgcanvas::SvgCanvas,
+    canvas::pixelcanvas::PixelCanvas,
     configuration::figureconfig::FigureConfig,
     datasets::{cartesiangraphdataset::CartesianDataset, dataset::Dataset},
+    display::winop::Winop,
     drawers::drawer::Drawer,
-    figuretypes::cartesiangraph::CartesianGraph,
+    figuretypes::quadrant1graph::Quadrant1Graph,
     utilities::linetype::LineType,
 };
 
@@ -31,49 +32,57 @@ fn main() {
         ), // Path to font file for the title
     };
 
-    // Create a new svg-based canvas with specified dimensions and background color
-    let mut svg_canvas = SvgCanvas::new(800, 600, "white", 80);
+    // Create a new pixel-based canvas with specified dimensions and background color
+    let mut pixel_canvas = PixelCanvas::new(800, 600, [255, 255, 255], 80);
 
-    // Create a CartesianGraph
-    let mut cartesian_graph =
-        CartesianGraph::new("Math Functions", "X Axis", "Y Axis", &figure_config.clone());
+    // Create a Quadrant1Graph
+    let mut quadrant1_graph = Quadrant1Graph::new(
+        "Quadrant 1 Graph",
+        "X Axis",
+        "Y Axis",
+        figure_config.clone(),
+    );
 
-    // Add datasets to CartesianGraph
+    // Add datasets to Quadrant1
     let mut sine_wave = CartesianDataset::new([0, 0, 255], "sin(x)", LineType::Dashed(10));
-    let mut cosine_wave = CartesianDataset::new([255, 0, 0], "cos(x)", LineType::Solid);
-
-    // Add datasets
-    let mut line5 = CartesianDataset::new([0, 0, 220], "line1", LineType::Solid);
-    let mut line6 = CartesianDataset::new([220, 0, 0], "line2", LineType::Dashed(10));
-    let mut line7 = CartesianDataset::new([0, 220, 0], "line3", LineType::Dotted(10));
-    let mut line8 = CartesianDataset::new([150, 100, 50], "line4", LineType::Solid);
-
-    let num_points = 10;
-    let step = 2.0 * PI / num_points as f64;
-    for x in 0..=num_points {
-        let xf = -PI + x as f64 * step;
-        line5.add_point((xf, xf));
-        line6.add_point((-xf, xf * 2.0));
-        line7.add_point((-2.0 * xf, -xf * 3.0));
-        line8.add_point((xf, xf * 4.0));
-    }
 
     let num_points = 1000;
     let step = 2.0 * PI / num_points as f64;
     for x in 0..=num_points {
         let xf = -PI + x as f64 * step;
-        sine_wave.add_point((xf, xf.sin()));
-        cosine_wave.add_point((xf, xf.cos()));
+        sine_wave.add_point((xf, xf.sin() + 1.0));
     }
 
-    cartesian_graph.add_dataset(sine_wave);
-    cartesian_graph.add_dataset(cosine_wave);
-    cartesian_graph.add_dataset(line5);
-    cartesian_graph.add_dataset(line6);
-    cartesian_graph.add_dataset(line7);
-    cartesian_graph.add_dataset(line8);
+    quadrant1_graph.add_dataset(sine_wave);
 
     // Draw CartesianGraph
-    cartesian_graph.draw_svg(&mut svg_canvas);
-    svg_canvas.save("cartesian_graph.svg").unwrap();
+    quadrant1_graph.draw(&mut pixel_canvas);
+
+    // Display the Quadrant1 interactively
+    Winop::display_interactive(
+        &mut pixel_canvas,
+        &mut quadrant1_graph,
+        "Interactive Quadrant1 Graph",
+    );
+
+    // Create a new pixel canvas for real-time display
+    // Closure to update sine wave data
+    let mut x_value: f64 = 4.0;
+    let update_data = move |graph: &mut Quadrant1Graph| {
+        for i in 0..graph.datasets.len() {
+            let y: f64 = (x_value).sin();
+            graph.datasets[i].add_point((x_value, y + 1.0));
+        }
+        x_value += 0.1;
+        graph.update_range();
+    };
+
+    // Display the Quadrant1 graph in real-time
+    Winop::display_real_time(
+        &mut pixel_canvas,
+        &mut quadrant1_graph,
+        "Real-Time Quadrant1 Graph",
+        update_data,
+        30,
+    );
 }
