@@ -1,7 +1,8 @@
 [package]
-name = "svggroupedbarchartvertical"
+name = "pixelareachartdisplay"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
 dataviz = "0.1.6"
+rand = "0.8.5"
