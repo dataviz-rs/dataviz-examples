@@ -207,7 +207,7 @@ struct Logs {
     trades: CsvLog,
     book: CsvLog,
     candles: CsvLog,
-    /// Open time of the last candle written.
+    /// Open time (UTC) of the last candle in `candles.csv`.
     last_candle: f64,
 }
 
@@ -224,8 +224,20 @@ impl Logs {
                 p("candles.csv"),
                 &["time", "open", "high", "low", "close", "volume", "taker_buy"],
             )?,
-            last_candle: f64::NEG_INFINITY,
+            // Continue an existing log without repeating candles.
+            last_candle: dataviz::plot::data::Table::read(p("candles.csv"))
+                .ok()
+                .and_then(|t| t.time_column("time"))
+                .and_then(|t| t.into_iter().filter(|v| v.is_finite()).reduce(f64::max))
+                .unwrap_or(f64::NEG_INFINITY),
         })
+    }
+    /// Writes buffered rows (once per poll, so closing the window loses
+    /// nothing).
+    fn flush(&mut self) {
+        let _ = self.trades.flush();
+        let _ = self.book.flush();
+        let _ = self.candles.flush();
     }
     fn rows(&self) -> u64 {
         self.trades.rows() + self.book.rows() + self.candles.rows()
@@ -337,8 +349,8 @@ fn poll(symbol: String, market: Arc<Mutex<Market>>, mut logs: Option<Logs>) {
                 if let Some(l) = &mut logs {
                     // Every candle but the last (still open), once.
                     for k in c.iter().take(c.len().saturating_sub(1)) {
-                        if k.t > l.last_candle {
-                            l.last_candle = k.t;
+                        if k.t - tz > l.last_candle {
+                            l.last_candle = k.t - tz;
                             let _ = l.candles.record(
                                 k.t - tz,
                                 &[k.open, k.high, k.low, k.close, k.volume, k.taker_buy],
@@ -366,6 +378,9 @@ fn poll(symbol: String, market: Arc<Mutex<Market>>, mut logs: Option<Logs>) {
                 m.high_24h = f("highPrice");
                 m.low_24h = f("lowPrice");
                 m.volume_24h = f("volume");
+            }
+            if let Some(l) = &mut logs {
+                l.flush();
             }
             m.logged = logs.as_ref().map(Logs::rows);
             m.version += 1;

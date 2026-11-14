@@ -48,9 +48,10 @@ CSV files (times in UTC, `● REC` in the title):
 |---|---|
 | `trades.csv` | every trade: time, price, qty, side (buy/sell) |
 | `book.csv` | once a second: best bid, best ask, spread, bid and ask depth (500 levels) |
-| `candles.csv` | every closed 1-minute candle (the 89 before the start once, then each new one) |
+| `candles.csv` | every closed 1-minute candle (on the first run also the 89 before it) |
 
-Existing files are appended to, so a log can be resumed. They load back with
+Files are written every second and appended to: running again continues the
+log (candles are not repeated). They load back with
 `dataviz::plot::data::Table::read`.
 
 ## License
