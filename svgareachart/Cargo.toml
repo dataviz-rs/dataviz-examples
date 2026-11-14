@@ -1,7 +1,0 @@
-[package]
-name = "svgareachart"
-version = "0.1.0"
-edition = "2021"
-
-[dependencies]
-dataviz = "0.2"

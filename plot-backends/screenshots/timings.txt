@@ -1,0 +1,5 @@
+# cargo run --release --features gpu (RTX 5070 Ti laptop GPU, 20-core CPU)
+1920×1080, 100000 points, one new point and a full redraw per frame:
+  CPU, 1 thread      2.01ms per frame,    2.00ms CPU
+  CPU, all cores     3.05ms per frame,   12.40ms CPU
+  GPU                2.54ms per frame,    2.30ms CPU

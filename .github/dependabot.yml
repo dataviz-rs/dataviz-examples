@@ -1,0 +1,17 @@
+# Keep every example on the newest dataviz release: a pull request is opened
+# as soon as a new version is published (CI then builds and runs them all).
+version: 2
+updates:
+  - package-ecosystem: cargo
+    directory: "/"
+    schedule:
+      interval: daily
+    allow:
+      - dependency-name: dataviz
+    versioning-strategy: increase
+    commit-message:
+      prefix: "dataviz"
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: monthly

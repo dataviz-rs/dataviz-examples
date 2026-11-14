@@ -3,7 +3,8 @@
 Runnable examples for [dataviz](https://github.com/dataviz-rs/dataviz)
 ([crates.io](https://crates.io/crates/dataviz), [docs](https://docs.rs/dataviz)),
 a pure-Rust plotting library with 40+ chart types, SVG/PNG/JPEG/WebP/PDF
-output, interactive windows and terminal output.
+output, interactive and live windows, terminal output and CPU / multi-core /
+GPU rendering. The examples always use the latest dataviz release.
 
 ## Running an example
 
@@ -15,8 +16,8 @@ cargo run --release
 
 Every example writes its output (PNG and/or SVG) to the current directory;
 the `screenshots/` folder of each example contains that output. The
-`*display` and `plot-interactive` examples also open a window. No font file is
-needed: an installed sans-serif font is used by default.
+`plot-interactive` example also opens a window. No font file is needed: the
+font is built into dataviz.
 
 The repository is a Cargo workspace, so `cargo build --workspace` builds all
 of them at once.
@@ -24,7 +25,7 @@ of them at once.
 Linux needs the usual windowing libraries for the window examples, e.g.
 `sudo apt-get install libxkbcommon-dev libwayland-dev`.
 
-## Plot API examples (`dataviz::plot`, 0.2)
+## Examples
 
 | Example | What it shows | Output |
 |---|---|---|
@@ -61,33 +62,7 @@ Linux needs the usual windowing libraries for the window examples, e.g.
 | [`plot-themes`](plot-themes) | Every built-in theme | <img src="plot-themes/screenshots/theme_dark.png" width="260"> |
 | [`plot-interactive`](plot-interactive) | Interactive window (zoom, pan, hover) and live data | <img src="plot-interactive/screenshots/interactive.png" width="260"> |
 | [`plot-terminal`](plot-terminal) | Charts in the terminal (half blocks / braille) | [terminal.txt](plot-terminal/screenshots/terminal.txt) |
-
-## Classic API examples (`dataviz::figure`)
-
-
-| Example | What it shows | Output |
-|---|---|---|
-| [`pixelareachart`](pixelareachart) | Area chart → PNG | <img src="pixelareachart/screenshots/area_chart.png" width="220"> |
-| [`pixelareachartdisplay`](pixelareachartdisplay) | Area chart in an interactive / real-time window | <img src="pixelareachartdisplay/screenshots/areachartdisplay.png" width="220"> |
-| [`pixelcartesiangraph`](pixelcartesiangraph) | Cartesian graph (solid, dashed, dotted lines) → PNG | <img src="pixelcartesiangraph/screenshots/cartesian_graph.png" width="220"> |
-| [`pixelcartesiandisplay`](pixelcartesiandisplay) | Cartesian graph in an interactive / real-time window | <img src="pixelcartesiandisplay/screenshots/cartesiangraphdisplay.png" width="220"> |
-| [`pixelgroupedbarchartvertical`](pixelgroupedbarchartvertical) | Grouped vertical bar chart → PNG | <img src="pixelgroupedbarchartvertical/screenshots/grouped_vertical_bar_chart.png" width="220"> |
-| [`pixelgroupedbarcharthorizontal`](pixelgroupedbarcharthorizontal) | Grouped horizontal bar chart → PNG | <img src="pixelgroupedbarcharthorizontal/screenshots/grouped_horizontal_bar_chart.png" width="220"> |
-| [`pixelgroupedbarchartfigurefactory`](pixelgroupedbarchartfigurefactory) | Bar chart created with `FigureFactory` → PNG | <img src="pixelgroupedbarchartfigurefactory/screenshots/grouped_vertical_bar_chart.png" width="220"> |
-| [`pixelgroupedbarchartdisplay`](pixelgroupedbarchartdisplay) | Grouped bar chart in an interactive / real-time window | <img src="pixelgroupedbarchartdisplay/screenshots/interactivedisplay.png" width="220"> |
-| [`pixelhistogram`](pixelhistogram) | Histogram → PNG | <img src="pixelhistogram/screenshots/histogram.png" width="220"> |
-| [`pixelhistogramdisplay`](pixelhistogramdisplay) | Histogram in an interactive / real-time window | <img src="pixelhistogramdisplay/screenshots/histogramdisplay.png" width="220"> |
-| [`pixelpiechartdisplay`](pixelpiechartdisplay) | Pie chart → PNG + real-time window | <img src="pixelpiechartdisplay/screenshots/piechart.png" width="220"> |
-| [`pixelquadrant1graphdisplay`](pixelquadrant1graphdisplay) | Quadrant 1 graph in an interactive / real-time window | <img src="pixelquadrant1graphdisplay/screenshots/quadrant1graph.png" width="220"> |
-| [`pixelscattergraphdisplay`](pixelscattergraphdisplay) | Scatter graph → PNG + real-time window | <img src="pixelscattergraphdisplay/screenshots/scatter_graph.png" width="220"> |
-| [`svgareachart`](svgareachart) | Area chart → SVG | <img src="svgareachart/screenshots/area_chart.svg" width="220"> |
-| [`svgcartesiangraph`](svgcartesiangraph) | Cartesian graph → SVG | <img src="svgcartesiangraph/screenshots/cartesian_graph.svg" width="220"> |
-| [`svggroupedbarchartvertical`](svggroupedbarchartvertical) | Grouped vertical bar chart → SVG | <img src="svggroupedbarchartvertical/screenshots/grouped_vertical_bar_chart.svg" width="220"> |
-| [`svggroupedbarcharthorizontal`](svggroupedbarcharthorizontal) | Grouped horizontal bar chart → SVG | <img src="svggroupedbarcharthorizontal/screenshots/grouped_horizontal_bar_chart.svg" width="220"> |
-| [`svghistogram`](svghistogram) | Histogram → SVG | <img src="svghistogram/screenshots/histogram.svg" width="220"> |
-| [`svgpiechart`](svgpiechart) | Pie chart → SVG | <img src="svgpiechart/screenshots/pie_chart.svg" width="220"> |
-| [`svgquadrant1graph`](svgquadrant1graph) | Quadrant 1 graph, all line styles, data-point markers → SVG | <img src="svgquadrant1graph/screenshots/quadrant1_graph_markers.svg" width="220"> |
-| [`svgscattergraph`](svgscattergraph) | Scatter graph with every dot type → SVG | <img src="svgscattergraph/screenshots/scatter_graph.svg" width="220"> |
+| [`plot-backends`](plot-backends) | CPU, multi-core and GPU rendering with timings | <img src="plot-backends/screenshots/backends.png" width="260"> |
 
 ## License
 

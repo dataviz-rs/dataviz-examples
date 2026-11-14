@@ -10,24 +10,28 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install system dependencies (minifb, fonts)
-        run: sudo apt-get update && sudo apt-get install -y libxkbcommon-dev libwayland-dev fonts-dejavu-core
+      - name: Install system dependencies (minifb)
+        run: sudo apt-get update && sudo apt-get install -y libxkbcommon-dev libwayland-dev
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
+      - name: Use the latest dataviz release
+        run: cargo update -p dataviz
       - name: Build every example
         run: cargo build --workspace
-      - name: Run the examples that write files (no window needed)
+      - name: Run every example (the interactive one only renders its PNG)
         run: |
           mkdir -p out && cd out
-          for bin in barchart pixelareachart pixelcartesiangraph pixelgroupedbarchartfigurefactory \
-                     pixelgroupedbarcharthorizontal pixelhistogram svgareachart svgcartesiangraph \
-                     svggroupedbarchartvertical svggroupedbarcharthorizontal svghistogram \
-                     svgpiechart svgquadrant1graph svgscattergraph; do
-            echo "::group::$bin"; ../target/debug/$bin; echo "::endgroup::"
-          done
           for dir in ../plot-*; do
             bin=$(basename $dir)
-            [ "$bin" = plot-interactive ] && continue
-            echo "::group::$bin"; ../target/debug/$bin > /dev/null; echo "::endgroup::"
+            echo "::group::$bin"
+            if [ "$bin" = plot-interactive ]; then
+              timeout 10 ../target/debug/$bin > /dev/null || true
+              test -s interactive.png
+            elif [ "$bin" = plot-backends ]; then
+              ../target/debug/$bin 3
+            else
+              ../target/debug/$bin > /dev/null
+            fi
+            echo "::endgroup::"
           done
           ls -l

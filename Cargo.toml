@@ -1,21 +1,9 @@
 [workspace]
 resolver = "2"
 members = [
-    "pixelareachart",
-    "pixelareachartdisplay",
-    "pixelcartesiandisplay",
-    "pixelcartesiangraph",
-    "pixelgroupedbarchartdisplay",
-    "pixelgroupedbarchartfigurefactory",
-    "pixelgroupedbarcharthorizontal",
-    "pixelgroupedbarchartvertical",
-    "pixelhistogram",
-    "pixelhistogramdisplay",
-    "pixelpiechartdisplay",
-    "pixelquadrant1graphdisplay",
-    "pixelscattergraphdisplay",
     "plot-annotations",
     "plot-area-fill",
+    "plot-backends",
     "plot-bars",
     "plot-box-violin",
     "plot-candlestick",
@@ -47,13 +35,5 @@ members = [
     "plot-three-d",
     "plot-time-series",
     "plot-treemap-sunburst",
-    "svgareachart",
-    "svgcartesiangraph",
-    "svggroupedbarcharthorizontal",
-    "svggroupedbarchartvertical",
-    "svghistogram",
-    "svgpiechart",
-    "svgquadrant1graph",
-    "svgscattergraph",
 ]
 

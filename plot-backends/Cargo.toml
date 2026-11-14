@@ -1,0 +1,12 @@
+[package]
+name = "plot-backends"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+dataviz = "0.4"
+
+[features]
+# `cargo run --release --features gpu` adds the GPU backend (wgpu).
+gpu = ["dataviz/gpu"]
