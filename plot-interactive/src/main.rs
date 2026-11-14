@@ -6,11 +6,14 @@ use dataviz::prelude::*;
 fn main() -> Result<(), Error> {
     let mut fig = Figure::new(900, 560);
     let ax = fig.axes();
-    ax.title("Interactive: wheel = zoom, drag = pan, R = reset");
+    ax.title("Interactive: wheel = zoom, drag = pan, Shift+drag = measure, R = reset");
     let x: Vec<f64> = (0..2000).map(|i| i as f64 / 100.0).collect();
     ax.line(&x, x.iter().map(|v| v.sin() * (v / 5.0).exp())).label("growing sine");
     ax.scatter((0..20).map(|i| i as f64), (0..20).map(|i| (i as f64 * 0.7).cos() * 5.0))
         .label("points");
+    // Overview of all data below the plot; drag it to pan, its edges to zoom.
+    ax.range_slider(true);
+    ax.x_limits(4.0, 12.0).auto_scale_y(true);
     fig.save("interactive.png")?;
     fig.show("dataviz interactive")?;
 
