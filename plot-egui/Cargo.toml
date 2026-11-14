@@ -1,0 +1,10 @@
+[package]
+name = "plot-egui"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+# The egui window shows the figure; dataviz's own window is not needed.
+dataviz = { version = "0.15", default-features = false }
+eframe = "0.37"

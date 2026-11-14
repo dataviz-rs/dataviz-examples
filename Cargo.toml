@@ -13,6 +13,7 @@ members = [
     "plot-candlestick",
     "plot-contour",
     "plot-distributions",
+    "plot-egui",
     "plot-errorbars-band",
     "plot-facets",
     "plot-formats",

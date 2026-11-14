@@ -67,6 +67,7 @@ Linux needs the usual windowing libraries for the window examples, e.g.
 | [`plot-image`](plot-image) | Image display | <img src="plot-image/screenshots/image.png" width="260"> |
 | [`plot-themes`](plot-themes) | Every built-in theme | <img src="plot-themes/screenshots/theme_dark.png" width="260"> |
 | [`plot-interactive`](plot-interactive) | Interactive window (zoom, pan, hover) and live data | <img src="plot-interactive/screenshots/interactive.png" width="260"> |
+| [`plot-egui`](plot-egui) | Embedded in an egui app: texture + zoom/pan/hover API | <img src="plot-egui/screenshots/egui.png" width="260"> |
 | [`plot-html`](plot-html) | Interactive HTML: hover, crosshair, legend toggle | <img src="plot-html/screenshots/html.png" width="260"> |
 | [`plot-wasm`](plot-wasm) | In the browser: Rust → WebAssembly, streaming, zoom, hover | <img src="plot-wasm/screenshots/wasm.png" width="260"> |
 | [`plot-accessibility`](plot-accessibility) | Alt text, color vision simulation and checks | <img src="plot-accessibility/screenshots/risky.png" width="260"> |

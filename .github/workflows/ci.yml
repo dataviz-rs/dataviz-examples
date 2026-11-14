@@ -24,7 +24,10 @@ jobs:
           for dir in ../plot-*; do
             bin=$(basename $dir)
             echo "::group::$bin"
-            if [ "$bin" = plot-wasm ]; then
+            if [ "$bin" = plot-egui ]; then
+              ../target/debug/$bin --screenshot egui.png
+              test -s egui.png
+            elif [ "$bin" = plot-wasm ]; then
               echo "WebAssembly library: built for wasm32 below"
             elif [ "$bin" = plot-binance ]; then
               echo "needs network access to Binance: built only"
