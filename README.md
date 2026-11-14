@@ -16,7 +16,8 @@ cargo run --release
 
 Every example writes its output (PNG and/or SVG) to the current directory;
 the `screenshots/` folder of each example contains that output. The
-`plot-interactive` example also opens a window. No font file is needed: the
+`plot-interactive` and `plot-streaming` examples open a window
+(`plot-streaming --record out.gif` works without one). No font file is needed: the
 font is built into dataviz.
 
 The repository is a Cargo workspace, so `cargo build --workspace` builds all
@@ -61,6 +62,7 @@ Linux needs the usual windowing libraries for the window examples, e.g.
 | [`plot-image`](plot-image) | Image display | <img src="plot-image/screenshots/image.png" width="260"> |
 | [`plot-themes`](plot-themes) | Every built-in theme | <img src="plot-themes/screenshots/theme_dark.png" width="260"> |
 | [`plot-interactive`](plot-interactive) | Interactive window (zoom, pan, hover) and live data | <img src="plot-interactive/screenshots/interactive.png" width="260"> |
+| [`plot-streaming`](plot-streaming) | Live dashboard for streaming data (simulated sensors, CPU/memory, stdin) | <img src="plot-streaming/screenshots/streaming.gif" width="260"> |
 | [`plot-terminal`](plot-terminal) | Charts in the terminal (half blocks / braille) | [terminal.txt](plot-terminal/screenshots/terminal.txt) |
 | [`plot-backends`](plot-backends) | CPU, multi-core and GPU rendering with timings | <img src="plot-backends/screenshots/backends.png" width="260"> |
 

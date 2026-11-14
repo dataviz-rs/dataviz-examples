@@ -1,0 +1,10 @@
+[package]
+name = "plot-streaming"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+dataviz = "0.4.1"
+# Only for writing the animated GIF of `--record`.
+image = { version = "0.25", default-features = false, features = ["gif"] }

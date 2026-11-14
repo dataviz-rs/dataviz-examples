@@ -29,6 +29,9 @@ jobs:
               test -s interactive.png
             elif [ "$bin" = plot-backends ]; then
               ../target/debug/$bin 3
+            elif [ "$bin" = plot-streaming ]; then
+              ../target/debug/$bin sim --record streaming.gif --seconds 2
+              test -s streaming.gif
             else
               ../target/debug/$bin > /dev/null
             fi
