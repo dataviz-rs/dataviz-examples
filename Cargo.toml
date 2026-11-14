@@ -26,6 +26,7 @@ members = [
     "plot-international",
     "plot-line",
     "plot-log-scales",
+    "plot-maps",
     "plot-markers-steps-smooth",
     "plot-math",
     "plot-network",
