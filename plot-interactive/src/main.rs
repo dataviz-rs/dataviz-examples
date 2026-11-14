@@ -15,6 +15,9 @@ fn main() -> Result<(), Error> {
     ax.range_slider(true);
     ax.x_limits(4.0, 12.0).auto_scale_y(true);
     fig.save("interactive.png")?;
+    if std::env::args().any(|a| a == "--demo") {
+        return demo(&mut fig);
+    }
     fig.show("dataviz interactive")?;
 
     let mut live = Figure::new(900, 400);
@@ -30,4 +33,34 @@ fn main() -> Result<(), Error> {
         line.keep_last(300);
         true
     })
+}
+
+/// `--demo`: records `interactive.gif` without a window: zooming in with
+/// the wheel, panning by dragging and resetting, through the same calls a
+/// window or GUI makes (`zoom_at`, `pan_by`, `reset_view`).
+fn demo(fig: &mut Figure) -> Result<(), Error> {
+    let mut rec = Recorder::create("interactive.gif", 25.0)?;
+    rec.frame(fig)?; // also records the layout for the calls below
+    // Wheel zoom at the centre of the plot, then a drag to the right
+    // (earlier data); y keeps fitting the visible data (auto scale).
+    let (cx, cy) = (460.0, 250.0);
+    for _ in 0..12 {
+        rec.frame(fig)?;
+    }
+    for _ in 0..14 {
+        fig.zoom_at(cx, cy, 0.92);
+        rec.frame(fig)?;
+    }
+    for _ in 0..30 {
+        fig.pan_by(cx, cy, 10.0, 0.0);
+        rec.frame(fig)?;
+    }
+    for _ in 0..15 {
+        rec.frame(fig)?;
+    }
+    fig.reset_view();
+    for _ in 0..20 {
+        rec.frame(fig)?;
+    }
+    rec.finish()
 }
