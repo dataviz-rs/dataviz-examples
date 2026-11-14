@@ -38,6 +38,8 @@ Linux needs the usual windowing libraries for the window examples, e.g.
 | [`plot-bars`](plot-bars) | Bar charts | <img src="plot-bars/screenshots/bars.png" width="260"> |
 | [`plot-histograms`](plot-histograms) | Histograms, KDE and ECDF | <img src="plot-histograms/screenshots/histograms.png" width="260"> |
 | [`plot-box-violin`](plot-box-violin) | Box and violin plots | <img src="plot-box-violin/screenshots/box_violin.png" width="260"> |
+| [`plot-distributions`](plot-distributions) | Strip, swarm, ridgeline and Q-Q plots | <img src="plot-distributions/screenshots/distributions.png" width="260"> |
+| [`plot-facets`](plot-facets) | Small multiples and pair plots | <img src="plot-facets/screenshots/facets.png" width="260"> |
 | [`plot-errorbars-band`](plot-errorbars-band) | Error bars and confidence bands | <img src="plot-errorbars-band/screenshots/errorbars_band.png" width="260"> |
 | [`plot-heatmap`](plot-heatmap) | Heatmap (correlation matrix) | <img src="plot-heatmap/screenshots/heatmap.png" width="260"> |
 | [`plot-hist2d-hexbin`](plot-hist2d-hexbin) | 2D histogram and hexbin | <img src="plot-hist2d-hexbin/screenshots/hist2d_hexbin.png" width="260"> |
