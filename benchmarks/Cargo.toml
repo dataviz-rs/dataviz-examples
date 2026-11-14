@@ -1,0 +1,18 @@
+[package]
+name = "dataviz-benchmarks"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+# Not part of the examples workspace (the competitors are only needed here).
+[workspace]
+
+[dependencies]
+dataviz = { version = "0.15", default-features = false, features = ["gpu"] }
+plotters = "0.3.7"
+charts-rs = { version = "2.3", features = ["png"] }
+kuva = { version = "0.6", features = ["png"] }
+ruviz = { version = "0.15.2", features = ["animation"] }
+
+[profile.release]
+debug = false
