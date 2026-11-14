@@ -21,6 +21,7 @@ members = [
     "plot-hist2d-hexbin",
     "plot-histograms",
     "plot-image",
+    "plot-html",
     "plot-indicators",
     "plot-interactive",
     "plot-international",
