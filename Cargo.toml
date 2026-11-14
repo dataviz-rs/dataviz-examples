@@ -46,5 +46,15 @@ members = [
     "plot-three-d",
     "plot-time-series",
     "plot-treemap-sunburst",
+    "plot-wasm",
 ]
 
+
+# Small WebAssembly builds: `cargo build --profile wasm --target wasm32-unknown-unknown -p plot-wasm`.
+[profile.wasm]
+inherits = "release"
+opt-level = "s"
+lto = true
+codegen-units = 1
+strip = true
+panic = "abort"

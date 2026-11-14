@@ -68,6 +68,7 @@ Linux needs the usual windowing libraries for the window examples, e.g.
 | [`plot-themes`](plot-themes) | Every built-in theme | <img src="plot-themes/screenshots/theme_dark.png" width="260"> |
 | [`plot-interactive`](plot-interactive) | Interactive window (zoom, pan, hover) and live data | <img src="plot-interactive/screenshots/interactive.png" width="260"> |
 | [`plot-html`](plot-html) | Interactive HTML: hover, crosshair, legend toggle | <img src="plot-html/screenshots/html.png" width="260"> |
+| [`plot-wasm`](plot-wasm) | In the browser: Rust → WebAssembly, streaming, zoom, hover | <img src="plot-wasm/screenshots/wasm.png" width="260"> |
 | [`plot-international`](plot-international) | Text in any language: CJK, Arabic, Hebrew, Hindi, Thai, emoji | <img src="plot-international/screenshots/international.png" width="260"> |
 | [`plot-math`](plot-math) | Math notation in labels, legends and annotations | <img src="plot-math/screenshots/math.png" width="260"> |
 | [`plot-animation`](plot-animation) | Animations: GIF and animated PNG | <img src="plot-animation/screenshots/animation.gif" width="260"> |

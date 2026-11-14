@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>dataviz in the browser</title>
+<style>
+  body { margin: 0; padding: 16px; font: 14px system-ui, sans-serif; background: #f6f7f9; color: #222; }
+  #wrap { position: relative; width: 960px; max-width: 100%; }
+  canvas { width: 100%; height: auto; background: #fff; border: 1px solid #ddd; border-radius: 6px; cursor: crosshair; }
+  #tip { position: absolute; pointer-events: none; background: rgba(255,255,255,.96); border: 1px solid #999;
+         border-radius: 4px; padding: 3px 8px; font-size: 12px; display: none; white-space: nowrap; }
+  #stats { margin-top: 8px; color: #666; font-variant-numeric: tabular-nums; }
+</style>
+</head>
+<body>
+<div id="wrap"><canvas id="c" width="960" height="520"></canvas><div id="tip"></div></div>
+<div id="stats">loading…</div>
+<p>Wheel: zoom · drag: pan · double-click: follow the data again · click a legend row: hide/show the series.</p>
+<script type="module">
+const W = 960, H = 520;
+const canvas = document.getElementById('c'), ctx = canvas.getContext('2d');
+const tip = document.getElementById('tip'), stats = document.getElementById('stats');
+const { instance } = await WebAssembly.instantiateStreaming(fetch('plot_wasm.wasm'), {});
+const x = instance.exports;
+x.init(W, H);
+
+// Canvas pixels of a mouse event (the canvas may be scaled by CSS).
+const at = e => { const r = canvas.getBoundingClientRect(); return [(e.clientX - r.left) * W / r.width, (e.clientY - r.top) * H / r.height]; };
+canvas.addEventListener('wheel', e => { e.preventDefault(); const [px, py] = at(e); x.wheel(px, py, e.deltaY); }, { passive: false });
+let last = null, moved = false;
+canvas.addEventListener('mousedown', e => { last = at(e); moved = false; });
+window.addEventListener('mouseup', e => { if (last && !moved) { const [px, py] = at(e); x.click(px, py); } last = null; });
+canvas.addEventListener('dblclick', () => x.reset());
+canvas.addEventListener('mousemove', e => {
+  const p = at(e);
+  if (last) { const dx = p[0] - last[0], dy = p[1] - last[1]; if (Math.abs(dx) + Math.abs(dy) > 1) { moved = true; x.drag(last[0], last[1], dx, dy); last = p; } }
+  const n = x.hover(p[0], p[1]);
+  if (n) {
+    tip.textContent = new TextDecoder().decode(new Uint8Array(x.memory.buffer, x.text_ptr(), n));
+    const r = canvas.getBoundingClientRect();
+    tip.style.left = (e.clientX - r.left + 14) + 'px'; tip.style.top = (e.clientY - r.top - 10) + 'px'; tip.style.display = 'block';
+  } else tip.style.display = 'none';
+});
+canvas.addEventListener('mouseleave', () => tip.style.display = 'none');
+
+let frames = 0, spent = 0, t0 = performance.now();
+function frame() {
+  const s = performance.now();
+  x.step(3);
+  const ptr = x.render();
+  // A new view each frame: the wasm memory may have grown.
+  ctx.putImageData(new ImageData(new Uint8ClampedArray(x.memory.buffer, ptr, W * H * 4), W, H), 0, 0);
+  spent += performance.now() - s; frames++;
+  if (performance.now() - t0 > 1000) {
+    stats.textContent = `${frames} fps · ${(spent / frames).toFixed(2)} ms per frame (update + render + blit) · 2 × 3000 points`;
+    frames = 0; spent = 0; t0 = performance.now();
+  }
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>

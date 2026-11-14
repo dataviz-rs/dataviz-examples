@@ -24,7 +24,9 @@ jobs:
           for dir in ../plot-*; do
             bin=$(basename $dir)
             echo "::group::$bin"
-            if [ "$bin" = plot-binance ]; then
+            if [ "$bin" = plot-wasm ]; then
+              echo "WebAssembly library: built for wasm32 below"
+            elif [ "$bin" = plot-binance ]; then
               echo "needs network access to Binance: built only"
             elif [ "$bin" = plot-interactive ]; then
               timeout 10 ../target/debug/$bin > /dev/null || true
@@ -40,3 +42,8 @@ jobs:
             echo "::endgroup::"
           done
           ls -l
+      - name: Build the WebAssembly example
+        run: |
+          rustup target add wasm32-unknown-unknown
+          cargo build --profile wasm --target wasm32-unknown-unknown -p plot-wasm
+          ls -l target/wasm32-unknown-unknown/wasm/plot_wasm.wasm
