@@ -57,7 +57,3 @@ members = [
     "svgscattergraph",
 ]
 
-# dataviz 0.2 is built from the main branch until it is on crates.io;
-# remove this section after publishing.
-[patch.crates-io]
-dataviz = { git = "https://github.com/dataviz-rs/dataviz", branch = "main" }

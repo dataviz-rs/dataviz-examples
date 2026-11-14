@@ -19,9 +19,7 @@ the `screenshots/` folder of each example contains that output. The
 needed: an installed sans-serif font is used by default.
 
 The repository is a Cargo workspace, so `cargo build --workspace` builds all
-of them at once. Until dataviz 0.2 is published on crates.io, the workspace
-builds dataviz from its `main` branch (see `[patch.crates-io]` in
-`Cargo.toml`).
+of them at once.
 
 Linux needs the usual windowing libraries for the window examples, e.g.
 `sudo apt-get install libxkbcommon-dev libwayland-dev`.
