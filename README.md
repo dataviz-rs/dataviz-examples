@@ -26,6 +26,12 @@ of them at once.
 Linux needs the usual windowing libraries for the window examples, e.g.
 `sudo apt-get install libxkbcommon-dev libwayland-dev`.
 
+## Benchmarks
+
+[`benchmarks/`](benchmarks) compares dataviz with plotters, ruviz, kuva and charts-rs
+(static, big data, real time, animation); results in
+[benchmarks/RESULTS.md](benchmarks/RESULTS.md), rerun with `python3 run_all.py`.
+
 ## Examples
 
 | Example | What it shows | Output |
