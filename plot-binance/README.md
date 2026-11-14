@@ -32,7 +32,10 @@ only, for illustration; not financial advice.
 
 ## Window controls
 
-Mouse wheel zooms, left-drag pans, right-drag zooms to a box. A zoomed or
+Mouse wheel zooms, left-drag pans, right-drag zooms to a box; the candles
+and the volume bars move together and share a crosshair (`C` toggles it)
+that shows the time, price and every series' value under the cursor.
+Clicking a legend row (e.g. MA(25)) hides or shows that series. A zoomed or
 panned plot keeps its view while new data arrives; auto scale (on, `A`
 toggles it) fits the y-axis to the visible data, so you move along time and
 the prices stay in view. `R` follows the live data again, `S` saves a PNG,

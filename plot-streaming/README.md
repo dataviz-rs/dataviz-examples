@@ -52,7 +52,8 @@ Mouse wheel zooms, left-drag pans, right-drag zooms to a box. A zoomed or
 panned plot keeps its view while new data arrives; auto scale (on, `A`
 toggles it) fits the y-axis to the visible data, so you move along time and
 the prices stay in view. `R` follows the live data again, `S` saves a PNG,
-`H` toggles hover tooltips, `Esc` closes. The window has a normal title bar
+`C` toggles the crosshair, `H` hover tooltips, clicking a legend row hides or
+shows a series, `Esc` closes. The window has a normal title bar
 (X11/XWayland); `DATAVIZ_WAYLAND=1` uses Wayland directly.
 
 ## Recording (`--log FILE`)
