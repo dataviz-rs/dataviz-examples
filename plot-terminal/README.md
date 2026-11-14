@@ -2,6 +2,8 @@
 
 Charts printed in the terminal with 24-bit colored half blocks or braille dots (`Figure::to_terminal`, `Figure::print`), e.g. over SSH or in CI logs.
 
+<img src="./screenshots/terminal.png" alt="Chart in a terminal" width="700">
+
 
 
 Braille output (`TerminalMode::BrailleMono`) is saved to [`screenshots/terminal.txt`](screenshots/terminal.txt).

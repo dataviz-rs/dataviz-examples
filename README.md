@@ -82,7 +82,7 @@ Linux needs the usual windowing libraries for the window examples, e.g.
 | [`plot-animation`](plot-animation) | Animations: GIF and animated PNG | <img src="plot-animation/screenshots/animation.gif" width="260"> |
 | [`plot-streaming`](plot-streaming) | Live dashboard for streaming data (simulated sensors, CPU/memory, stdin) | <img src="plot-streaming/screenshots/streaming.gif" width="260"> |
 | [`plot-binance`](plot-binance) | Live Binance BTC/USDT dashboard: candles, volume, trades, order book, buy/sell pressure | <img src="plot-binance/screenshots/binance.png" width="260"> |
-| [`plot-terminal`](plot-terminal) | Charts in the terminal (half blocks / braille) | [terminal.txt](plot-terminal/screenshots/terminal.txt) |
+| [`plot-terminal`](plot-terminal) | Charts in the terminal (half blocks / braille) | <img src="plot-terminal/screenshots/terminal.png" width="260"> |
 | [`plot-backends`](plot-backends) | CPU, multi-core and GPU rendering with timings | <img src="plot-backends/screenshots/backends.png" width="260"> |
 
 ## License
