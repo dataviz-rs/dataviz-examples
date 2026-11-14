@@ -1,0 +1,25 @@
+[workspace]
+resolver = "2"
+members = [
+    "pixelareachart",
+    "pixelareachartdisplay",
+    "pixelcartesiandisplay",
+    "pixelcartesiangraph",
+    "pixelgroupedbarchartdisplay",
+    "pixelgroupedbarchartfigurefactory",
+    "pixelgroupedbarcharthorizontal",
+    "pixelgroupedbarchartvertical",
+    "pixelhistogram",
+    "pixelhistogramdisplay",
+    "pixelpiechartdisplay",
+    "pixelquadrant1graphdisplay",
+    "pixelscattergraphdisplay",
+    "svgareachart",
+    "svgcartesiangraph",
+    "svggroupedbarcharthorizontal",
+    "svggroupedbarchartvertical",
+    "svghistogram",
+    "svgpiechart",
+    "svgquadrant1graph",
+    "svgscattergraph",
+]

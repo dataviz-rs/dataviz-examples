@@ -13,10 +13,8 @@ fn main() {
     // Attempt to downcast the Drawer trait object to GroupBarChart
     // Dereference the Box and use downcast_mut
     if let Some(group_bar_chart) = figure.as_any().downcast_mut::<GroupBarChart>() {
-        group_bar_chart.config.set_font_paths(
-            "path/to/dataviz/resources/fonts/Arial.ttf".to_string(),
-            "path/to/dataviz/resources/fonts/Arial.ttf".to_string(),
-        );
+        // Fonts are optional; to use your own TTF/OTF files:
+        // group_bar_chart.config.set_font_paths("label.ttf".to_string(), "title.ttf".to_string());
 
         // Create a SVG canvas for rendering the chart
         let mut canvas = PixelCanvas::new(800, 600, [255, 255, 255], 80); // 800x600 canvas with white background

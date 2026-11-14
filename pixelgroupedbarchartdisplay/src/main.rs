@@ -18,16 +18,14 @@ fn main() {
         font_size_legend: 14.0,      // Font size for legend
         font_size_axis: 10.0,        // Font size for axis tick labels
         color_axis: [0, 0, 0],       // Color of the axes (black)
-        color_background: [0, 0, 0], // Background color of the chart (black)
+        color_background: [255, 255, 255], // Background color of the chart (white)
         color_grid: [220, 220, 220], // Grid color (light gray)
         color_title: [0, 0, 0],      // Title color (black)
         num_axis_ticks: 20,          // Number of axis tick marks
         num_grid_horizontal: 20,     // Number of horizontal grid lines
         num_grid_vertical: 20,       // Number of vertical grid lines
-        font_label: Some("path/to/dataviz/resources/fonts/Arial.ttf"
-            .to_string()), // Path to the font for axis labels
-        font_title: Some("path/to/dataviz/resources/fonts/Arial.ttf"
-            .to_string()), // Path to the font for the title
+        font_label: None, // None: an installed sans-serif font is used; or Some("path/to/font.ttf".to_string())
+        font_title: None, // None: an installed sans-serif font is used; or Some("path/to/font.ttf".to_string())
     };
 
     // Create a grouped bar chart with the given configuration

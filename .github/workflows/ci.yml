@@ -1,0 +1,28 @@
+name: CI
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: "0 6 * * 1" # weekly: catch breakage from new dataviz releases
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install system dependencies (minifb, fonts)
+        run: sudo apt-get update && sudo apt-get install -y libxkbcommon-dev libwayland-dev fonts-dejavu-core
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - name: Build every example
+        run: cargo build --workspace
+      - name: Run the examples that write files (no window needed)
+        run: |
+          mkdir -p out && cd out
+          for bin in barchart pixelareachart pixelcartesiangraph pixelgroupedbarchartfigurefactory \
+                     pixelgroupedbarcharthorizontal pixelhistogram svgareachart svgcartesiangraph \
+                     svggroupedbarchartvertical svggroupedbarcharthorizontal svghistogram \
+                     svgpiechart svgquadrant1graph svgscattergraph; do
+            echo "::group::$bin"; ../target/debug/$bin; echo "::endgroup::"
+          done
+          ls -l
