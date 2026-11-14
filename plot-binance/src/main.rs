@@ -14,8 +14,14 @@
 //! cargo run --release                          # BTCUSDT
 //! cargo run --release -- ETHUSDT               # any spot symbol
 //! cargo run --release -- BTCUSDT --png out.png --seconds 10   # no window
+//! cargo run --release -- BTCUSDT --log binance-log   # also record to CSV
 //! ```
+//!
+//! With `--log DIR` every trade (`trades.csv`), an order-book summary per
+//! second (`book.csv`) and every closed 1-minute candle (`candles.csv`) are
+//! appended to CSV files (`dataviz::plot::data::CsvLog`, times in UTC).
 
+use dataviz::plot::data::CsvLog;
 use dataviz::prelude::*;
 use std::collections::{BTreeMap, VecDeque};
 use std::process::Command;
@@ -192,6 +198,38 @@ struct Market {
     /// Incremented on every update (the window redraws when it changes).
     version: u64,
     error: Option<String>,
+    /// Rows written to the CSV logs (`--log`).
+    logged: Option<u64>,
+}
+
+/// The CSV files of `--log DIR`.
+struct Logs {
+    trades: CsvLog,
+    book: CsvLog,
+    candles: CsvLog,
+    /// Open time of the last candle written.
+    last_candle: f64,
+}
+
+impl Logs {
+    fn open(dir: &str) -> std::io::Result<Logs> {
+        let p = |f: &str| std::path::Path::new(dir).join(f);
+        Ok(Logs {
+            trades: CsvLog::create(p("trades.csv"), &["time", "price", "qty", "side"])?,
+            book: CsvLog::create(
+                p("book.csv"),
+                &["time", "best_bid", "best_ask", "spread", "bid_depth", "ask_depth"],
+            )?,
+            candles: CsvLog::create(
+                p("candles.csv"),
+                &["time", "open", "high", "low", "close", "volume", "taker_buy"],
+            )?,
+            last_candle: f64::NEG_INFINITY,
+        })
+    }
+    fn rows(&self) -> u64 {
+        self.trades.rows() + self.book.rows() + self.candles.rows()
+    }
 }
 
 /// Seconds to add to UTC timestamps to show local time (`date +%z`).
@@ -207,8 +245,15 @@ fn local_offset() -> f64 {
     sign * (h * 3600.0 + m * 60.0)
 }
 
+/// Current UTC time in seconds.
+fn now_utc() -> f64 {
+    std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .map_or(0.0, |d| d.as_secs_f64())
+}
+
 /// Polls Binance forever, updating `market`.
-fn poll(symbol: String, market: Arc<Mutex<Market>>) {
+fn poll(symbol: String, market: Arc<Mutex<Market>>, mut logs: Option<Logs>) {
     let tz = local_offset();
     let mut tick = 0u64;
     loop {
@@ -238,6 +283,15 @@ fn poll(symbol: String, market: Arc<Mutex<Market>>) {
                         // isBuyerMaker = the seller was the taker.
                         let buy = !tr.get("isBuyerMaker").is_some_and(Json::bool);
                         m.trades.push_back(Trade { t: time / 1000.0 + tz, price, qty, buy });
+                        if let Some(l) = &mut logs {
+                            let side = if buy { "buy" } else { "sell" };
+                            let _ = l.trades.row([
+                                dataviz::plot::data::format_timestamp(time / 1000.0),
+                                price.to_string(),
+                                qty.to_string(),
+                                side.to_string(),
+                            ]);
+                        }
                     }
                     let now = m.trades.back().map_or(0.0, |t| t.t);
                     while m.trades.front().is_some_and(|t| t.t < now - 120.0) {
@@ -255,6 +309,13 @@ fn poll(symbol: String, market: Arc<Mutex<Market>>) {
                 };
                 m.bids = side("bids");
                 m.asks = side("asks");
+                if let (Some(l), Some(b), Some(a)) = (&mut logs, m.bids.first(), m.asks.first()) {
+                    // Rounded to 8 decimals (Binance's precision).
+                    let r8 = |v: f64| (v * 1e8).round() / 1e8;
+                    let depth = |s: &[(f64, f64)]| r8(s.iter().map(|p| p.1).sum::<f64>());
+                    let row = [b.0, a.0, r8(a.0 - b.0), depth(&m.bids), depth(&m.asks)];
+                    let _ = l.book.record(now_utc(), &row);
+                }
             }
             if let Some(k) = &candles {
                 let c: Vec<Candle> = k
@@ -273,6 +334,18 @@ fn poll(symbol: String, market: Arc<Mutex<Market>>) {
                         })
                     })
                     .collect();
+                if let Some(l) = &mut logs {
+                    // Every candle but the last (still open), once.
+                    for k in c.iter().take(c.len().saturating_sub(1)) {
+                        if k.t > l.last_candle {
+                            l.last_candle = k.t;
+                            let _ = l.candles.record(
+                                k.t - tz,
+                                &[k.open, k.high, k.low, k.close, k.volume, k.taker_buy],
+                            );
+                        }
+                    }
+                }
                 if !c.is_empty() {
                     m.candles = c;
                 }
@@ -294,6 +367,7 @@ fn poll(symbol: String, market: Arc<Mutex<Market>>) {
                 m.low_24h = f("lowPrice");
                 m.volume_24h = f("volume");
             }
+            m.logged = logs.as_ref().map(Logs::rows);
             m.version += 1;
         }
         tick += 1;
@@ -313,10 +387,11 @@ fn dashboard(symbol: &str, m: &Market) -> Figure {
     fig.grid(3, 2);
     let price = m.trades.back().map(|t| t.price).or(m.candles.last().map(|c| c.close)).unwrap_or(f64::NAN);
     let sign = if m.change_pct >= 0.0 { "+" } else { "" };
+    let rec = m.logged.map_or(String::new(), |n| format!("   ● REC {n} rows"));
     fig.title(match &m.error {
-        Some(e) => format!("{symbol}  ·  {e}"),
+        Some(e) => format!("{symbol}  ·  {e}{rec}"),
         None => format!(
-            "{symbol}  {price:.2}   24h {sign}{:.2} %   high {:.2}   low {:.2}   volume {:.0}",
+            "{symbol}  {price:.2}   24h {sign}{:.2} %   high {:.2}   low {:.2}   volume {:.0}{rec}",
             m.change_pct, m.high_24h, m.low_24h, m.volume_24h
         ),
     });
@@ -423,10 +498,18 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let symbol = args.first().filter(|a| !a.starts_with("--")).map_or("BTCUSDT", |s| s.as_str()).to_uppercase();
     let flag = |name: &str| args.iter().position(|a| a == name).and_then(|i| args.get(i + 1)).cloned();
 
+    let logs = match flag("--log") {
+        Some(dir) => {
+            let l = Logs::open(&dir)?;
+            println!("logging to {dir}/trades.csv, book.csv and candles.csv");
+            Some(l)
+        }
+        None => None,
+    };
     let market = Arc::new(Mutex::new(Market::default()));
     {
         let (symbol, market) = (symbol.clone(), market.clone());
-        std::thread::spawn(move || poll(symbol, market));
+        std::thread::spawn(move || poll(symbol, market, logs));
     }
     let snapshot = || market.lock().unwrap_or_else(|e| e.into_inner()).clone();
 

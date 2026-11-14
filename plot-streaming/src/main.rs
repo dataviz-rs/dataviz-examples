@@ -15,8 +15,10 @@
 //!     | cargo run --release -- stdin      # any numbers, one sample per line
 //! cargo run --release -- sim --window 10                         # 10 s of history
 //! cargo run --release -- sim --record streaming.gif --seconds 8   # GIF, no window
+//! cargo run --release -- cpu --log cpu.csv          # also record every sample
 //! ```
 
+use dataviz::plot::data::CsvLog;
 use dataviz::plot::series::line::Line;
 use dataviz::plot::series::stats::Histogram;
 use dataviz::prelude::*;
@@ -145,6 +147,9 @@ struct Dashboard {
     last_rate: f64,
     /// Seconds of history shown.
     window: f64,
+    /// `--log FILE`: the path, then the open log once the channels are known.
+    log_path: Option<String>,
+    log: Option<CsvLog>,
 }
 
 impl Dashboard {
@@ -162,6 +167,8 @@ impl Dashboard {
             arrivals: Default::default(),
             last_rate: 0.0,
             window,
+            log_path: None,
+            log: None,
         }
     }
 
@@ -198,6 +205,14 @@ impl Dashboard {
                     dist.title(format!("{first}: distribution (last {} s)", self.window));
                     dist.hist(Vec::<f64>::new()).bin_count(30);
                     self.latest = vec![f64::NAN; names.len()];
+                    if let Some(path) = &self.log_path {
+                        let header: Vec<&str> =
+                            std::iter::once("time").chain(names.iter().map(String::as_str)).collect();
+                        match CsvLog::create(path, &header) {
+                            Ok(log) => self.log = Some(log),
+                            Err(e) => eprintln!("cannot log to {path}: {e}"),
+                        }
+                    }
                     self.names = names;
                 }
                 Msg::Sample { t, values } => {
@@ -209,6 +224,9 @@ impl Dashboard {
                         self.latest[i] = *v;
                     }
                     self.arrivals.push_back(t);
+                    if let Some(log) = &mut self.log {
+                        let _ = log.record(t, &values);
+                    }
                 }
             }
             changed = true;
@@ -234,7 +252,8 @@ impl Dashboard {
             .zip(&self.latest)
             .map(|(n, v)| format!("{n} {v:.1}"))
             .collect();
-        top.title(values.join("   "));
+        let rec = self.log.as_ref().map_or(String::new(), |l| format!("   ● REC {} rows", l.rows()));
+        top.title(values.join("   ") + &rec);
         // Histogram of the first channel's window.
         let first: Vec<f64> = top.series_mut::<Line>(0).map_or(Vec::new(), |l| l.data().1.to_vec());
         if let Some(h) = fig.at(1, 0).series_mut::<Histogram>(0) {
@@ -291,11 +310,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let source = args.first().filter(|a| !a.starts_with("--")).map_or("sim", |s| s.as_str()).to_string();
     let flag = |name: &str| args.iter().position(|a| a == name).and_then(|i| args.get(i + 1)).cloned();
     let window = flag("--window").and_then(|s| s.parse().ok()).unwrap_or(WINDOW);
+    let log = flag("--log");
     if let Some(path) = flag("--record") {
         let seconds = flag("--seconds").and_then(|s| s.parse().ok()).unwrap_or(8.0);
         return record(&source, window, &path, seconds, 10);
     }
     let mut dash = Dashboard::new(&source, window);
+    dash.log_path = log;
     let mut fig = Dashboard::figure(&source, window);
     fig.show_live("dataviz live data", 30, |fig| dash.update(fig))?;
     Ok(())

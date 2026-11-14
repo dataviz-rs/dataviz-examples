@@ -46,6 +46,21 @@ To stream your own data, replace one of the producer functions in
 sends `Msg::Sample { t, values }` over the channel works (sockets, serial
 ports, message queues, …).
 
+## Window controls
+
+Mouse wheel zooms, left-drag pans, right-drag zooms to a box. A zoomed or
+panned plot keeps its view while new data arrives; auto scale (on, `A`
+toggles it) fits the y-axis to the visible data, so you move along time and
+the prices stay in view. `R` follows the live data again, `S` saves a PNG,
+`H` toggles hover tooltips, `Esc` closes. The window has a normal title bar
+(X11/XWayland); `DATAVIZ_WAYLAND=1` uses Wayland directly.
+
+## Recording (`--log FILE`)
+
+`cargo run --release -- cpu --log cpu.csv` also appends every sample to a CSV
+file (`time` in UTC plus one column per channel, `● REC` in the title), using
+`dataviz::plot::data::CsvLog`; it loads back with `Table::read`.
+
 ## License
 
 MIT

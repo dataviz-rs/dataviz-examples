@@ -30,6 +30,29 @@ cargo run --release -- BTCUSDT --png binance.png --seconds 10   # snapshot, no w
 Needs `curl` and network access to `data-api.binance.vision`. Market data
 only, for illustration; not financial advice.
 
+## Window controls
+
+Mouse wheel zooms, left-drag pans, right-drag zooms to a box. A zoomed or
+panned plot keeps its view while new data arrives; auto scale (on, `A`
+toggles it) fits the y-axis to the visible data, so you move along time and
+the prices stay in view. `R` follows the live data again, `S` saves a PNG,
+`H` toggles hover tooltips, `Esc` closes. The window has a normal title bar
+(X11/XWayland); `DATAVIZ_WAYLAND=1` uses Wayland directly.
+
+## Recording (`--log DIR`)
+
+`cargo run --release -- BTCUSDT --log binance-log` also appends the data to
+CSV files (times in UTC, `● REC` in the title):
+
+| File | Rows |
+|---|---|
+| `trades.csv` | every trade: time, price, qty, side (buy/sell) |
+| `book.csv` | once a second: best bid, best ask, spread, bid and ask depth (500 levels) |
+| `candles.csv` | every closed 1-minute candle (the 89 before the start once, then each new one) |
+
+Existing files are appended to, so a log can be resumed. They load back with
+`dataviz::plot::data::Table::read`.
+
 ## License
 
 MIT
