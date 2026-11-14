@@ -12,6 +12,7 @@ members = [
     "plot-biology-3d",
     "plot-box-violin",
     "plot-broken-axis",
+    "plot-business",
     "plot-candlestick",
     "plot-contour",
     "plot-data-science",

@@ -11,6 +11,22 @@ by a marker gene, and single-cell clusters on a 3D UMAP.
 
 <img src="./screenshots/biology_3d.png" alt="DNA helix, PDB structures, cell, organoid, 3D UMAP" width="900">
 
+<img src="./screenshots/protein.png" alt="Protein cartoons, Ramachandran plot, isosurfaces" width="900">
+
+Proteins: ubiquitin (PDB 1UBQ) and crambin (1CRN) as cartoons (helices as
+ribbons, strands as arrows, from the PDB HELIX/SHEET records), ubiquitin
+colored from N- to C-terminus, its Ramachandran plot from the backbone
+dihedrals, and isosurfaces (marching tetrahedra) of a density around
+crambin and of a nucleus with its nucleolus.
+
+```rust
+ax.molecule(Molecule::from_pdb(&pdb)).style(MolStyle::Cartoon);
+let angles = molecule.phi_psi();               // (φ, ψ, residue)
+ax.ramachandran(&phi, &psi);
+ax.isosurface_fn(|x, y, z| density(x, y, z), bounds, 64, 0.55);
+ax.isosurface(&volume, [nx, ny, nz], bounds, level);   // microscopy / CT stacks
+```
+
 ```rust
 ax.dna_helix("ATGCGTATAAAAGCC").highlight(5..11, "#ffd400", Some("TATA box"));
 ax.molecule(Molecule::from_pdb(&pdb)).style(MolStyle::BallAndStick);
@@ -42,7 +58,7 @@ Built with the [`dataviz::plot`](https://docs.rs/dataviz/latest/dataviz/plot/) A
 ```sh
 git clone https://github.com/dataviz-rs/dataviz-examples.git
 cd dataviz-examples/plot-biology-3d
-cargo run --release              # biology_3d.png and rotate.gif
+cargo run --release              # biology_3d.png, protein.png and rotate.gif
 cargo run --release -- --window  # interactive
 ```
 
@@ -50,10 +66,11 @@ See [`src/main.rs`](src/main.rs) for the code.
 
 ## Data
 
-`data/1BNA.pdb` and `data/1CRN.pdb` are from the
+`data/1BNA.pdb`, `data/1CRN.pdb` and `data/1UBQ.pdb` are from the
 [RCSB Protein Data Bank](https://www.rcsb.org/) (public domain, CC0):
 1BNA, Drew et al. 1981, *Structure of a B-DNA dodecamer*; 1CRN, Teeter
-1984, *Crambin*.
+1984, *Crambin*; 1UBQ, Vijay-Kumar et al. 1987, *Structure of ubiquitin
+refined at 1.8 Å resolution*.
 
 ## License
 

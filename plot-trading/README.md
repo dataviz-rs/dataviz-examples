@@ -8,6 +8,22 @@ in a window.
 
 <img src="./screenshots/trading.png" alt="Charts for traders" width="800">
 
+<img src="./screenshots/orderflow.png" alt="Liquidity heatmap, footprint, market profile, option payoffs, volatility surface" width="900">
+
+Order flow and options: an order-book liquidity heatmap with the traded
+price, footprint bars (bid × ask per price level, imbalances, point of
+control), a market profile (TPO letters, POC, value area), the payoff of an
+iron condor and a covered call at expiry and before it (Black–Scholes),
+and an implied volatility surface.
+
+```rust
+ax.liquidity_heatmap((t0, t1), (p0, p1), &depth);
+ax.footprint(bars, 0.25);
+ax.market_profile(&half_hour_ranges, 1.0);
+ax.option_payoff(&[OptionLeg::Put { strike: 95.0, premium: 2.0, qty: -1.0 }, /* … */], (82.0, 118.0), 30.0, 0.22, 0.03);
+ax.volatility_surface(&strikes, &maturities, &iv);
+```
+
 ```rust
 let x = ax.trading_axis(&times, "%d %b");
 ax.candlestick(&x, &open, &high, &low, &close);

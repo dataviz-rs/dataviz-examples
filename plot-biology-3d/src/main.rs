@@ -1,7 +1,9 @@
 //! 3D biology: a DNA double helix, real structures from the Protein Data
 //! Bank (B-DNA 1BNA as ball-and-stick, the protein crambin 1CRN as a
 //! backbone tube), a cell with nucleus, mitochondria and ribosomes, an
-//! organoid of cells and single-cell clusters on a 3D UMAP.
+//! organoid of cells and single-cell clusters on a 3D UMAP; protein
+//! cartoons (ubiquitin 1UBQ, crambin 1CRN), a Ramachandran plot and
+//! isosurfaces (`protein.png`).
 //!
 //! `cargo run --release` writes `biology_3d.png` and `rotate.gif` (the
 //! scenes turning around x, y and z). With `--window` the figure opens in a
@@ -12,6 +14,7 @@ use dataviz::prelude::*;
 
 const BNA: &str = include_str!("../data/1BNA.pdb");
 const CRN: &str = include_str!("../data/1CRN.pdb");
+const UBQ: &str = include_str!("../data/1UBQ.pdb");
 
 /// Small deterministic random numbers (xorshift).
 struct Rng(u64);
@@ -174,9 +177,61 @@ fn rotate_gif() -> Result<(), Error> {
     rec.finish()
 }
 
+/// Proteins: ubiquitin as a cartoon, its Ramachandran plot, crambin's
+/// cartoon colored along the chain, and an isosurface of a density.
+fn protein() -> Result<(), Error> {
+    let ubq = Molecule::from_pdb(UBQ);
+    let mut fig = Figure::new(1500, 1000);
+    fig.grid(2, 3);
+    fig.at(0, 0)
+        .title("Ubiquitin (PDB 1UBQ): cartoon")
+        .molecule(ubq.clone())
+        .style(MolStyle::Cartoon);
+    fig.at(0, 0).legend(LegendPosition::LowerRight);
+    fig.at(0, 1)
+        .title("Ubiquitin colored N → C")
+        .molecule(ubq.clone())
+        .style(MolStyle::Cartoon)
+        .coloring(MolColor::Rainbow);
+    let angles = ubq.phi_psi();
+    let (phi, psi): (Vec<f64>, Vec<f64>) = angles.iter().map(|a| (a.0, a.1)).unzip();
+    fig.at(0, 2).title("Ramachandran plot of 1UBQ").ramachandran(&phi, &psi);
+    fig.at(1, 0)
+        .title("Crambin (PDB 1CRN): cartoon")
+        .molecule(Molecule::from_pdb(CRN))
+        .style(MolStyle::Cartoon);
+    fig.at(1, 0).legend(LegendPosition::Hidden);
+    // Electron-density-like volume: Gaussian blobs at the 1CRN Cα atoms.
+    let crn = Molecule::from_pdb(CRN);
+    let ca: Vec<[f64; 3]> = crn.atoms.iter().filter(|a| a.name == "CA").map(|a| a.pos).collect();
+    let lo = (0..3).map(|k| ca.iter().map(|p| p[k]).fold(f64::INFINITY, f64::min) - 4.0).collect::<Vec<_>>();
+    let hi = (0..3).map(|k| ca.iter().map(|p| p[k]).fold(f64::NEG_INFINITY, f64::max) + 4.0).collect::<Vec<_>>();
+    let bounds = [(lo[0], hi[0]), (lo[1], hi[1]), (lo[2], hi[2])];
+    let density = |x: f64, y: f64, z: f64| -> f64 {
+        ca.iter().map(|p| (-((x - p[0]).powi(2) + (y - p[1]).powi(2) + (z - p[2]).powi(2)) / 6.0).exp()).sum()
+    };
+    let ax = fig.at(1, 1);
+    ax.title("Isosurface: density around crambin");
+    ax.isosurface_fn(density, bounds, 56, 0.55).color("#4a90d9");
+    ax.equal_aspect(true).box3d(false).depth_cue(0.25);
+    // A cell's nucleus from a "microscopy stack": two isosurface levels.
+    let blob = |x: f64, y: f64, z: f64| -> f64 {
+        let r = (x * x / 1.3 + y * y + z * z / 0.7).sqrt();
+        1.0 - r + 0.12 * (5.0 * x).sin() * (4.0 * y).cos() * (3.0 * z).sin()
+    };
+    let b = [(-1.3, 1.3), (-1.3, 1.3), (-1.0, 1.0)];
+    let ax = fig.at(1, 2);
+    ax.title("Isosurfaces: nucleus and nucleolus");
+    ax.isosurface_fn(blob, b, 64, 0.0).color("#8e44ad").opacity(0.35).label("nucleus");
+    ax.isosurface_fn(blob, b, 64, 0.55).color("#e67e22").label("nucleolus");
+    ax.equal_aspect(true).box3d(false);
+    fig.save("protein.png")
+}
+
 fn main() -> Result<(), Error> {
     let mut fig = figure();
     fig.save("biology_3d.png")?;
+    protein()?;
     if std::env::args().any(|a| a == "--window") {
         return fig.show("dataviz 3D: drag = turn, wheel = zoom, X/Y/Z = rotate, R = reset");
     }

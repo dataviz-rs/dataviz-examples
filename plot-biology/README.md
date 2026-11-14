@@ -11,6 +11,22 @@ ratios, and a clustermap of gene expression.
 
 <img src="./screenshots/clustermap.png" alt="Clustermap" width="600">
 
+<img src="./screenshots/genomics.png" alt="Circos, Hi-C, coverage, phylogenetic trees, oncoprint, mutation lollipop" width="900">
+
+Genomics: a Circos plot (hg38 chromosomes, copy number, translocations), a
+Hi-C contact map with TADs, exome coverage with a minimum-depth check,
+phylogenetic trees from Newick text (rectangular and circular), an
+oncoprint of ten cancer genes and TP53 mutations along the protein.
+
+```rust
+ax.circos(&chromosomes).track(&chrom, &pos, &copy_number).links(&translocations);
+ax.hic(matrix, 1.0, 0.025).domains(&tads);
+ax.coverage(&pos, &depth).min_depth(20.0);
+ax.phylo_tree(newick);              // phylo_tree_circular(newick)
+ax.oncoprint(&genes, samples, &events);
+ax.mutation_lollipop(393.0, &domains, &mutations);
+```
+
 ```rust
 ax.sequence_logo(&aligned);
 ax.gene_track(&genes);
@@ -33,7 +49,7 @@ cd dataviz-examples/plot-biology
 cargo run --release
 ```
 
-Writes `biology.png`, `biology.svg` and `clustermap.png`. See
+Writes `biology.png`, `biology.svg`, `clustermap.png` and `genomics.png`. See
 [`src/main.rs`](src/main.rs) for the code.
 
 ## License
