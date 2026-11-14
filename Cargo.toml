@@ -12,8 +12,10 @@ members = [
     "plot-broken-axis",
     "plot-candlestick",
     "plot-contour",
+    "plot-data-science",
     "plot-distributions",
     "plot-egui",
+    "plot-engineering",
     "plot-errorbars-band",
     "plot-facets",
     "plot-formats",
@@ -47,6 +49,7 @@ members = [
     "plot-themes",
     "plot-three-d",
     "plot-time-series",
+    "plot-trading",
     "plot-treemap-sunburst",
     "plot-wasm",
 ]
@@ -60,3 +63,4 @@ lto = true
 codegen-units = 1
 strip = true
 panic = "abort"
+

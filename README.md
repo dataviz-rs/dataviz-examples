@@ -50,6 +50,9 @@ Linux needs the usual windowing libraries for the window examples, e.g.
 | [`plot-heatmap`](plot-heatmap) | Heatmap (correlation matrix) | <img src="plot-heatmap/screenshots/heatmap.png" width="260"> |
 | [`plot-hist2d-hexbin`](plot-hist2d-hexbin) | 2D histogram and hexbin | <img src="plot-hist2d-hexbin/screenshots/hist2d_hexbin.png" width="260"> |
 | [`plot-contour`](plot-contour) | Contour plots | <img src="plot-contour/screenshots/contour.png" width="260"> |
+| [`plot-data-science`](plot-data-science) | ROC/PR curves, confusion matrix, regression band, density, dendrogram | <img src="plot-data-science/screenshots/data_science.png" width="260"> |
+| [`plot-engineering`](plot-engineering) | FFT spectrum, spectrogram, Bode, Nyquist, Smith chart | <img src="plot-engineering/screenshots/engineering.png" width="260"> |
+| [`plot-trading`](plot-trading) | Ichimoku, VWAP, volume profile, depth, stochastic, ATR, drawdown, Renko | <img src="plot-trading/screenshots/trading.png" width="260"> |
 | [`plot-candlestick`](plot-candlestick) | Candlestick chart | <img src="plot-candlestick/screenshots/candlestick.png" width="260"> |
 | [`plot-indicators`](plot-indicators) | Bollinger bands, RSI, MACD, Heikin-Ashi | <img src="plot-indicators/screenshots/indicators.png" width="260"> |
 | [`plot-time-series`](plot-time-series) | Time series | <img src="plot-time-series/screenshots/time_series.png" width="260"> |
