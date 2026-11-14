@@ -9,6 +9,7 @@ members = [
     "plot-bars",
     "plot-binance",
     "plot-biology",
+    "plot-biology-3d",
     "plot-box-violin",
     "plot-broken-axis",
     "plot-candlestick",
