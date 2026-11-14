@@ -19,6 +19,7 @@ members = [
     "plot-histograms",
     "plot-image",
     "plot-interactive",
+    "plot-international",
     "plot-line",
     "plot-log-scales",
     "plot-markers-steps-smooth",
