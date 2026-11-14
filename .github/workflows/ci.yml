@@ -24,7 +24,9 @@ jobs:
           for dir in ../plot-*; do
             bin=$(basename $dir)
             echo "::group::$bin"
-            if [ "$bin" = plot-interactive ]; then
+            if [ "$bin" = plot-binance ]; then
+              echo "needs network access to Binance: built only"
+            elif [ "$bin" = plot-interactive ]; then
               timeout 10 ../target/debug/$bin > /dev/null || true
               test -s interactive.png
             elif [ "$bin" = plot-backends ]; then

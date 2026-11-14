@@ -5,6 +5,7 @@ members = [
     "plot-area-fill",
     "plot-backends",
     "plot-bars",
+    "plot-binance",
     "plot-box-violin",
     "plot-candlestick",
     "plot-contour",
