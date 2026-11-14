@@ -24,7 +24,35 @@ BIN = os.path.join(HERE, "target", "release")
 OUT = tempfile.mkdtemp(prefix="dataviz-bench-")
 # One core for single-thread runs: steadier timings (no migrations).
 PIN = ["taskset", "-c", "2"] if subprocess.run(["which", "taskset"], capture_output=True).returncode == 0 else []
+# matplotlib runs from the virtualenv made by the README's setup commands.
+PY = os.path.join(HERE, ".venv", "bin", "python")
+MPL = [PY, os.path.join(HERE, "mpl_bench.py")] if os.path.exists(PY) else None
 LIBS = [("dataviz", "dataviz"), ("plotters", "plotters"), ("ruviz", "ruviz"), ("kuva", "kuva"), ("charts-rs", "charts_rs")]
+if MPL:
+    LIBS.append(("matplotlib", "mpl"))
+
+
+# ONLY=matplotlib,plotters: measure only these libraries and keep the other
+# results of results.json.
+ONLY = set(filter(None, os.environ.get("ONLY", "").split(",")))
+PREV = {}
+
+
+def skip(group, key, name):
+    """True (and the previous result kept) when `name` is filtered out."""
+    return bool(ONLY) and not any(o in name for o in ONLY)
+
+
+def keep(group, key, name):
+    return PREV.get(group, {}).get(key, {}).get(name)
+
+
+def command(binary, mode):
+    """The command line of a benchmark program (`mode`: static, rt, anim)."""
+    if binary.endswith("mpl"):
+        return MPL + [mode]
+    prefix = {"static": "", "rt": "rt_", "anim": "anim_"}[mode]
+    return [os.path.join(BIN, prefix + binary)]
 
 
 def run(cmd, env=None, timeout=300, pin=False):
@@ -50,26 +78,30 @@ def single_threaded(binary, env):
     return (env or {}).get("BACKEND", "cpu") == "cpu"
 
 
-def static_chart(binary, scenario, n, reps, env=None):
+def static_chart(binary, scenario, n, reps, env=None, runs=5):
     """Median warm time and CPU per chart (ms), peak RSS (MB). `reps` is an
     upper bound: slow charts get fewer repetitions (about 2 s per run)."""
-    probe = run([os.path.join(BIN, binary), scenario, str(n), "png", os.path.join(OUT, binary)],
+    probe = run(command(binary, "static") + [scenario, str(n), "png", os.path.join(OUT, binary)],
                 dict(env or {}, BENCH_REPS="2"), pin=single_threaded(binary, env))
     if probe:
         est = float(probe[0].split()[1])
         reps = max(3, min(reps, int(2000 / max(est, 0.01))))
     rows = []
-    for _ in range(5):
-        r = run([os.path.join(BIN, binary), scenario, str(n), "png", os.path.join(OUT, binary)],
+    for _ in range(runs):
+        r = run(command(binary, "static") + [scenario, str(n), "png", os.path.join(OUT, binary)],
                 dict(env or {}, BENCH_REPS=str(reps)), pin=single_threaded(binary, env))
         if r:
-            first, warm, cpu = map(float, r[0].split())
-            rows.append((warm, cpu, r[2]))
+            f = list(map(float, r[0].split()))
+            # matplotlib reports its memory above the data itself.
+            rows.append((f[1], f[2], r[2], f[3] if len(f) > 3 else None))
     if not rows:
         return None
-    rows.sort()
-    warm, cpu, rss = rows[len(rows) // 2]
-    return {"ms": warm, "cpu_ms": cpu, "rss_mb": rss}
+    rows.sort(key=lambda r: r[0])
+    warm, cpu, rss, extra = rows[len(rows) // 2]
+    out = {"ms": warm, "cpu_ms": cpu, "rss_mb": rss}
+    if extra is not None:
+        out["extra_mb"] = extra
+    return out
 
 
 def group_static():
@@ -78,6 +110,9 @@ def group_static():
         key = f"{sc} {n:,}"
         res[key] = {}
         for name, binary in LIBS:
+            if skip("static", key, name):
+                res[key][name] = keep("static", key, name)
+                continue
             r = static_chart(binary, sc, n, 201 if n <= 100_000 else 31, {"BACKEND": "cpu"} if name == "dataviz" else None)
             res[key][name] = r
             print(f"static {key:16} {name:10} {r}", flush=True)
@@ -92,9 +127,12 @@ def group_bigdata():
         base_rss = base[2] if base else 0.0
         res[key] = {"data_mb": base_rss}
         for name, binary in LIBS + [("dataviz all cores", "dataviz")]:
+            if skip("bigdata", key, name):
+                res[key][name] = keep("bigdata", key, name)
+                continue
             env = {"BACKEND": "par" if "all" in name else "cpu"} if name.startswith("dataviz") else None
-            r = static_chart(binary, sc, n, 3, env)
-            if r:
+            r = static_chart(binary, sc, n, 3, env, runs=3)
+            if r and "extra_mb" not in r:
                 r["extra_mb"] = max(0.0, r["rss_mb"] - base_rss)
             res[key][name] = r
             print(f"bigdata {key:18} {name:18} {r}", flush=True)
@@ -102,7 +140,7 @@ def group_bigdata():
 
 
 def realtime(binary, n, frames, env):
-    r = run([os.path.join(BIN, binary), str(n), str(frames)], env, timeout=900, pin=single_threaded(binary, env))
+    r = run(command(binary, "rt") + [str(n), str(frames)], env, timeout=900, pin=single_threaded(binary, env))
     if not r:
         return None
     try:
@@ -113,7 +151,7 @@ def realtime(binary, n, frames, env):
 
 
 def gpu_available():
-    r = realtime("rt_backends", 1000, 5, {"BACKEND": "gpu", "SIZE": "320x240"})
+    r = realtime("backends", 1000, 5, {"BACKEND": "gpu", "SIZE": "320x240"})
     return r is not None
 
 
@@ -124,13 +162,16 @@ def group_realtime():
         for n in [1_000, 100_000]:
             key = f"{size} {n:,}"
             res[key] = {}
-            variants = [("dataviz 1 thread", "rt_backends", {"BACKEND": "cpu"}),
-                        ("dataviz all cores", "rt_backends", {"BACKEND": "par"})]
+            variants = [("dataviz 1 thread", "backends", {"BACKEND": "cpu"}),
+                        ("dataviz all cores", "backends", {"BACKEND": "par"})]
             if gpu:
-                variants.append(("dataviz GPU", "rt_backends", {"BACKEND": "gpu"}))
-            variants += [(name, f"rt_{b}", {}) for name, b in LIBS[1:]]
+                variants.append(("dataviz GPU", "backends", {"BACKEND": "gpu"}))
+            variants += [(name, b, {}) for name, b in LIBS[1:]]
             for name, binary, env in variants:
-                frames = 20 if (binary == "rt_charts_rs" and n > 10_000) else 300
+                if skip("realtime", key, name):
+                    res[key][name] = keep("realtime", key, name)
+                    continue
+                frames = 20 if (binary == "charts_rs" and n > 10_000) else 300
                 r = realtime(binary, n, frames, dict(env, SIZE=size))
                 res[key][name] = r
                 print(f"realtime {key:18} {name:18} {r}", flush=True)
@@ -141,9 +182,12 @@ def group_animation():
     res = {}
     for sc in ["wave", "stream"]:
         res[sc] = {}
-        for lib in ["dataviz", "plotters", "ruviz"]:
+        for lib in ["dataviz", "plotters", "ruviz"] + (["matplotlib"] if MPL else []):
+            if skip("animation", sc, lib):
+                res[sc][lib] = keep("animation", sc, lib)
+                continue
             out = os.path.join(OUT, f"{lib}_{sc}.gif")
-            r = run([os.path.join(BIN, f"anim_{lib}"), sc, out], timeout=600)
+            r = run(command("mpl" if lib == "matplotlib" else lib, "anim") + [sc, out], timeout=600)
             if r:
                 d = json.loads(r[0].strip().splitlines()[-1])
                 res[sc][lib] = {"ms": d["wall_ms"], "cpu_ms": d["cpu_ms"], "rss_mb": d["rss_mb"], "kb": d["kb"]}
@@ -166,6 +210,9 @@ def machine():
     for crate in ["dataviz", "plotters", "ruviz", "kuva", "charts-rs"]:
         m = re.search(r'name = "%s"\nversion = "([^"]+)"' % re.escape(crate), lock)
         versions[crate] = m.group(1) if m else "?"
+    if MPL:
+        versions["matplotlib"] = subprocess.run(MPL[:1] + ["-c", "import matplotlib; print(matplotlib.__version__)"],
+                                                capture_output=True, text=True).stdout.strip()
     return {"cpu": cpu, "cores": os.cpu_count(), "gpu": gpu or "none", "os": platform.platform(), "versions": versions}
 
 
@@ -218,11 +265,12 @@ def markdown(results, info):
                     lines.append(f"| {name} | {fmt_ms(r['p50_ms'])} | {fmt_ms(r['cpu_ms'])} | {r['rss_mb']:.0f} MB |")
             lines.append("")
     if "animation" in results:
+        al = [l for l in ["dataviz", "plotters", "ruviz", "matplotlib"] if any(l in r for r in results["animation"].values())]
         lines += ["## Animated GIF (800×600, 120 frames)\n",
-                  "| Scenario | dataviz | plotters | ruviz |", "|---|---:|---:|---:|"]
+                  "| Scenario | " + " | ".join(al) + " |", "|---|" + "---:|" * len(al)]
         for sc, row in results["animation"].items():
-            vals = [row[l]["ms"] if row.get(l) else None for l in ["dataviz", "plotters", "ruviz"]]
-            cells = [f"{fmt_ms(row[l]['ms'])}, {row[l]['kb']} KB" if row.get(l) else "fails" for l in ["dataviz", "plotters", "ruviz"]]
+            vals = [row[l]["ms"] if row.get(l) else None for l in al]
+            cells = [f"{fmt_ms(row[l]['ms'])}, {row[l]['kb']} KB" if row.get(l) else "fails" for l in al]
             label = {"wave": "moving sine wave (whole plot changes)", "stream": "growing line (fixed axes)"}[sc]
             lines.append(f"| {label} | " + " | ".join(best_row(cells, vals)) + " |")
         lines.append("")
@@ -233,6 +281,7 @@ def main():
     groups = sys.argv[1:] or ["static", "bigdata", "realtime", "animation"]
     path = os.path.join(HERE, "results.json")
     results = json.load(open(path)) if os.path.exists(path) else {}
+    PREV.update(results)
     for g in groups:
         results[g] = globals()[f"group_{g}"]()
         json.dump(results, open(path, "w"), indent=1)

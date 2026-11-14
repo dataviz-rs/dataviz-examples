@@ -1,0 +1,16 @@
+static line 1,000       matplotlib {'ms': 29.511, 'cpu_ms': 29.483, 'rss_mb': 111.80078125, 'extra_mb': 42.1}
+static bar 20           matplotlib {'ms': 41.61, 'cpu_ms': 41.6, 'rss_mb': 109.68359375, 'extra_mb': 40.2}
+static scatter 10,000   matplotlib {'ms': 37.491, 'cpu_ms': 37.473, 'rss_mb': 109.0859375, 'extra_mb': 39.2}
+static scatter 100,000  matplotlib {'ms': 80.702, 'cpu_ms': 80.69, 'rss_mb': 123.8359375, 'extra_mb': 51.3}
+static line 100,000     matplotlib {'ms': 49.84, 'cpu_ms': 49.842, 'rss_mb': 247.15625, 'extra_mb': 174.6}
+static hist 1,000,000   matplotlib {'ms': 49.671, 'cpu_ms': 49.652, 'rss_mb': 118.93359375, 'extra_mb': 41.3}
+bigdata line 10,000,000    matplotlib         {'ms': 565.699, 'cpu_ms': 565.607, 'rss_mb': 1385.2265625, 'extra_mb': 1162.3}
+bigdata scatter 10,000,000 matplotlib         {'ms': 5112.722, 'cpu_ms': 5111.999, 'rss_mb': 1132.5859375, 'extra_mb': 909.8}
+bigdata hist 100,000,000   matplotlib         {'ms': 520.046, 'cpu_ms': 519.966, 'rss_mb': 845.7578125, 'extra_mb': 12.8}
+realtime 800x600 1,000      matplotlib         {'p50_ms': 9.98033799987752, 'p95_ms': 10.288853998645209, 'cpu_ms': 9.973754563333332, 'rss_mb': 73.64453125}
+realtime 800x600 100,000    matplotlib         {'p50_ms': 59.968163004668895, 'p95_ms': 62.43405700661242, 'cpu_ms': 60.17884146666666, 'rss_mb': 112.8984375}
+realtime 1920x1080 1,000    matplotlib         {'p50_ms': 11.988019999989774, 'p95_ms': 12.52429300075164, 'cpu_ms': 11.972979286666668, 'rss_mb': 79.89453125}
+realtime 1920x1080 100,000  matplotlib         {'p50_ms': 135.7960559980711, 'p95_ms': 137.25408400205197, 'cpu_ms': 135.82631386333335, 'rss_mb': 177.48828125}
+animation wave     matplotlib {'ms': 5902, 'cpu_ms': 5901, 'rss_mb': 359.9, 'kb': 1119}
+animation stream   matplotlib {'ms': 6100, 'cpu_ms': 6099, 'rss_mb': 359.9, 'kb': 420}
+wrote /home/samet/personal/projects/dataviz-examples/benchmarks/results.json and RESULTS.md
