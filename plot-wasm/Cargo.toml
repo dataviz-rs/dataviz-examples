@@ -9,4 +9,4 @@ crate-type = ["cdylib", "rlib"]
 
 [dependencies]
 # No window in the browser: the default `window` feature is off.
-dataviz = { version = "0.15", default-features = false }
+dataviz = { version = "0.16", default-features = false }

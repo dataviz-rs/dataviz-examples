@@ -50,6 +50,11 @@ Linux needs the usual windowing libraries for the window examples, e.g.
 | [`plot-heatmap`](plot-heatmap) | Heatmap (correlation matrix) | <img src="plot-heatmap/screenshots/heatmap.png" width="260"> |
 | [`plot-hist2d-hexbin`](plot-hist2d-hexbin) | 2D histogram and hexbin | <img src="plot-hist2d-hexbin/screenshots/hist2d_hexbin.png" width="260"> |
 | [`plot-contour`](plot-contour) | Contour plots | <img src="plot-contour/screenshots/contour.png" width="260"> |
+| [`plot-biology`](plot-biology) | DNA logo, gene track, GWAS, volcano, UMAP, dose-response, survival, forest, clustermap | <img src="plot-biology/screenshots/biology.png" width="260"> |
+| [`plot-biology-3d`](plot-biology-3d) | 3D DNA helix, PDB molecules (ball-and-stick, backbone), cell, organoid, 3D UMAP; rotate around x/y/z | <img src="plot-biology-3d/screenshots/rotate.gif" width="260"> |
+| [`plot-data-science`](plot-data-science) | ROC/PR curves, confusion matrix, regression band, density, dendrogram | <img src="plot-data-science/screenshots/data_science.png" width="260"> |
+| [`plot-engineering`](plot-engineering) | FFT spectrum, spectrogram, Bode, Nyquist, Smith chart | <img src="plot-engineering/screenshots/engineering.png" width="260"> |
+| [`plot-trading`](plot-trading) | Ichimoku, VWAP, volume profile, depth, stochastic, ATR, drawdown, Renko | <img src="plot-trading/screenshots/trading.png" width="260"> |
 | [`plot-candlestick`](plot-candlestick) | Candlestick chart | <img src="plot-candlestick/screenshots/candlestick.png" width="260"> |
 | [`plot-indicators`](plot-indicators) | Bollinger bands, RSI, MACD, Heikin-Ashi | <img src="plot-indicators/screenshots/indicators.png" width="260"> |
 | [`plot-time-series`](plot-time-series) | Time series | <img src="plot-time-series/screenshots/time_series.png" width="260"> |
@@ -67,7 +72,7 @@ Linux needs the usual windowing libraries for the window examples, e.g.
 | [`plot-funnel-gauge`](plot-funnel-gauge) | Funnel and gauge | <img src="plot-funnel-gauge/screenshots/funnel_gauge.png" width="260"> |
 | [`plot-network`](plot-network) | Network graph | <img src="plot-network/screenshots/network.png" width="260"> |
 | [`plot-parallel-calendar`](plot-parallel-calendar) | Parallel coordinates and calendar heatmap | <img src="plot-parallel-calendar/screenshots/parallel_calendar.png" width="260"> |
-| [`plot-three-d`](plot-three-d) | 3D surface and trajectory | <img src="plot-three-d/screenshots/three_d.png" width="260"> |
+| [`plot-three-d`](plot-three-d) | 3D surface, Lorenz trajectory, scatter in a mesh; drag/X/Y/Z to rotate | <img src="plot-three-d/screenshots/three_d.png" width="260"> |
 | [`plot-subplots-shared`](plot-subplots-shared) | Subplots with a shared x-axis | <img src="plot-subplots-shared/screenshots/subplots_shared.png" width="260"> |
 | [`plot-annotations`](plot-annotations) | Annotations | <img src="plot-annotations/screenshots/annotations.png" width="260"> |
 | [`plot-image`](plot-image) | Image display | <img src="plot-image/screenshots/image.png" width="260"> |
