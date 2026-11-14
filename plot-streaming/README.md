@@ -34,8 +34,10 @@ vmstat 1 | awk 'BEGIN{print "user system idle"} NR>2{print $13,$14,$15; fflush()
     | cargo run --release -- stdin
 ```
 
-Without a window (servers, CI) it records an animated GIF and the last frame
-as `streaming.png`:
+Without a window (servers, CI) it records an animation with
+`dataviz::prelude::Recorder` (GIF; `.png` gives a lossless animated PNG,
+`.mp4`/`.webm` need `ffmpeg`) and the last frame as `streaming.png`; in the
+window `V` starts and stops a GIF recording:
 
 ```sh
 cargo run --release -- sim --record streaming.gif --seconds 8

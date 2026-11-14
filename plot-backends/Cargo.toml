@@ -5,7 +5,7 @@ edition = "2021"
 publish = false
 
 [dependencies]
-dataviz = "0.5"
+dataviz = "0.6"
 
 [features]
 # `cargo run --release --features gpu` adds the GPU backend (wgpu).

@@ -62,6 +62,7 @@ Linux needs the usual windowing libraries for the window examples, e.g.
 | [`plot-image`](plot-image) | Image display | <img src="plot-image/screenshots/image.png" width="260"> |
 | [`plot-themes`](plot-themes) | Every built-in theme | <img src="plot-themes/screenshots/theme_dark.png" width="260"> |
 | [`plot-interactive`](plot-interactive) | Interactive window (zoom, pan, hover) and live data | <img src="plot-interactive/screenshots/interactive.png" width="260"> |
+| [`plot-animation`](plot-animation) | Animations: GIF and animated PNG | <img src="plot-animation/screenshots/animation.gif" width="260"> |
 | [`plot-streaming`](plot-streaming) | Live dashboard for streaming data (simulated sensors, CPU/memory, stdin) | <img src="plot-streaming/screenshots/streaming.gif" width="260"> |
 | [`plot-binance`](plot-binance) | Live Binance BTC/USDT dashboard: candles, volume, trades, order book, buy/sell pressure | <img src="plot-binance/screenshots/binance.png" width="260"> |
 | [`plot-terminal`](plot-terminal) | Charts in the terminal (half blocks / braille) | [terminal.txt](plot-terminal/screenshots/terminal.txt) |

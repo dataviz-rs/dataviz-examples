@@ -275,16 +275,14 @@ impl Dashboard {
     }
 }
 
-/// Renders `seconds` of the dashboard at `fps` into an animated GIF (and the
-/// last frame as PNG) without opening a window.
+/// Renders `seconds` of the dashboard at `fps` into an animation (GIF, or
+/// APNG / MP4 / WebM by extension; see `dataviz::plot::anim`) and the last
+/// frame as PNG, without opening a window.
 fn record(source: &str, window: f64, path: &str, seconds: f64, fps: u32) -> Result<(), Box<dyn std::error::Error>> {
-    use image::codecs::gif::{GifEncoder, Repeat};
-    use image::{Delay, Frame, RgbaImage};
     let mut dash = Dashboard::new(source, window);
     let mut fig = Dashboard::figure(source, window);
     fig.scale(0.75); // smaller GIF frames
-    let mut px = Pixels::default();
-    let mut frames = Vec::new();
+    let mut rec = Recorder::create(path, fps as f64)?;
     let start = Instant::now();
     let period = Duration::from_secs_f64(1.0 / fps as f64);
     let mut next = start;
@@ -292,16 +290,13 @@ fn record(source: &str, window: f64, path: &str, seconds: f64, fps: u32) -> Resu
         next += period;
         std::thread::sleep(next.saturating_duration_since(Instant::now()));
         dash.update(&mut fig);
-        fig.render_into(&mut px)?;
-        frames.push(RgbaImage::from_raw(px.width, px.height, px.rgba.clone()).ok_or("frame size")?);
+        rec.frame(&mut fig)?;
     }
+    let frames = rec.frames();
+    rec.finish()?;
     fig.scale(1.0);
     fig.save("streaming.png")?;
-    let mut gif = GifEncoder::new_with_speed(std::fs::File::create(path)?, 20);
-    gif.set_repeat(Repeat::Infinite)?;
-    let delay = Delay::from_numer_denom_ms(1000, fps);
-    gif.encode_frames(frames.into_iter().map(|f| Frame::from_parts(f, 0, 0, delay)))?;
-    println!("wrote {path} and streaming.png");
+    println!("wrote {path} ({frames} frames) and streaming.png");
     Ok(())
 }
 

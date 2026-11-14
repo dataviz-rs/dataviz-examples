@@ -1,6 +1,7 @@
 [workspace]
 resolver = "2"
 members = [
+    "plot-animation",
     "plot-annotations",
     "plot-area-fill",
     "plot-backends",
