@@ -1,0 +1,22 @@
+# Stacked areas
+
+Stacked and 100 % stacked area charts side by side.
+
+Built with the [`dataviz::plot`](https://docs.rs/dataviz/latest/dataviz/plot/) API.
+
+<img src="./screenshots/stacked_area.png" alt="Stacked areas" width="800">
+
+## Run
+
+```sh
+git clone https://github.com/dataviz-rs/dataviz-examples.git
+cd dataviz-examples/plot-stacked-area
+cargo run --release
+```
+
+Writes `stacked_area.png` and `stacked_area.svg` to the current directory. See
+[`src/main.rs`](src/main.rs) for the code.
+
+## License
+
+MIT

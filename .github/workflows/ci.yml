@@ -25,4 +25,9 @@ jobs:
                      svgpiechart svgquadrant1graph svgscattergraph; do
             echo "::group::$bin"; ../target/debug/$bin; echo "::endgroup::"
           done
+          for dir in ../plot-*; do
+            bin=$(basename $dir)
+            [ "$bin" = plot-interactive ] && continue
+            echo "::group::$bin"; ../target/debug/$bin > /dev/null; echo "::endgroup::"
+          done
           ls -l
