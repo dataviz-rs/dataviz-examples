@@ -45,8 +45,10 @@ Linux needs the usual windowing libraries for the window examples, e.g.
 | [`plot-hist2d-hexbin`](plot-hist2d-hexbin) | 2D histogram and hexbin | <img src="plot-hist2d-hexbin/screenshots/hist2d_hexbin.png" width="260"> |
 | [`plot-contour`](plot-contour) | Contour plots | <img src="plot-contour/screenshots/contour.png" width="260"> |
 | [`plot-candlestick`](plot-candlestick) | Candlestick chart | <img src="plot-candlestick/screenshots/candlestick.png" width="260"> |
+| [`plot-indicators`](plot-indicators) | Bollinger bands, RSI, MACD, Heikin-Ashi | <img src="plot-indicators/screenshots/indicators.png" width="260"> |
 | [`plot-time-series`](plot-time-series) | Time series | <img src="plot-time-series/screenshots/time_series.png" width="260"> |
 | [`plot-log-scales`](plot-log-scales) | Logarithmic scales | <img src="plot-log-scales/screenshots/log_scales.png" width="260"> |
+| [`plot-broken-axis`](plot-broken-axis) | Broken axes | <img src="plot-broken-axis/screenshots/broken_axis.png" width="260"> |
 | [`plot-formats`](plot-formats) | Tick formats | <img src="plot-formats/screenshots/formats.png" width="260"> |
 | [`plot-stem-waterfall`](plot-stem-waterfall) | Stem and waterfall charts | <img src="plot-stem-waterfall/screenshots/stem_waterfall.png" width="260"> |
 | [`plot-quiver-function`](plot-quiver-function) | Vector field and function plots | <img src="plot-quiver-function/screenshots/quiver_function.png" width="260"> |
