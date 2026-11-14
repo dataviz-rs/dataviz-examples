@@ -1,26 +1,26 @@
 # dataviz benchmarks
 
 Intel(R) Core(TM) Ultra 7 255HX (20 threads), GPU: NVIDIA GeForce RTX 5070 Ti Laptop GPU, Linux-7.0.0-38-generic-x86_64-with-glibc2.39.  
-Versions: dataviz 0.15.0, plotters 0.3.7, ruviz 0.15.2, kuva 0.6.0, charts-rs 2.3.0, matplotlib 3.11.2.
+Versions: dataviz 0.16.0, plotters 0.3.7, ruviz 0.15.2, kuva 0.6.0, charts-rs 2.3.0, PyVista 0.49.2, matplotlib 3.11.2.
 
 ## Static charts (800×600 PNG, one thread, time per chart)
 
 | Chart | dataviz | plotters | ruviz | kuva | charts-rs | matplotlib |
 |---|---:|---:|---:|---:|---:|---:|
-| line 1,000 | **1.62 ms** | 3.76 ms | 3.97 ms | 11.3 ms | 11.4 ms | 29.5 ms |
-| bar 20 | **0.81 ms** | 0.83 ms | 3.98 ms | 3.64 ms | 2.14 ms | 41.6 ms |
-| scatter 10,000 | **2.25 ms** | 2.90 ms | 4.38 ms | 8.71 ms | 76.6 ms | 37.5 ms |
-| scatter 100,000 | **10.1 ms** | 16.7 ms | 16.6 ms | 17.4 ms | 776.4 ms | 80.7 ms |
-| line 100,000 | **2.13 ms** | 5.99 ms | 8.22 ms | 28.4 ms | 831.8 ms | 49.8 ms |
-| hist 1,000,000 | **1.99 ms** | 2.77 ms | 29.7 ms | 15.8 ms | 12.4 ms | 49.7 ms |
+| line 1,000 | **1.53 ms** | 1.69 ms | 3.58 ms | 5.09 ms | 11.6 ms | 30.2 ms |
+| bar 20 | **0.82 ms** | 0.84 ms | 3.83 ms | 3.66 ms | 2.15 ms | 43.1 ms |
+| scatter 10,000 | **2.26 ms** | 2.93 ms | 4.29 ms | 8.86 ms | 78.6 ms | 38.7 ms |
+| scatter 100,000 | **10.2 ms** | 17.0 ms | 18.0 ms | 18.0 ms | 808.3 ms | 83.8 ms |
+| line 100,000 | **2.21 ms** | 6.12 ms | 8.08 ms | 29.1 ms | 861.2 ms | 52.2 ms |
+| hist 1,000,000 | **2.16 ms** | 2.83 ms | 30.3 ms | 16.6 ms | 13.2 ms | 50.8 ms |
 
 ## Big data (800×600 PNG): time and memory above the data
 
 | Chart | dataviz | plotters | ruviz | kuva | charts-rs | matplotlib | dataviz all cores |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| line 10,000,000 | 122.3 ms / +8 MB | 486.1 ms / +315 MB | 329.5 ms / +389 MB | 2.71 s / +787 MB | fails | 565.7 ms / +1162 MB | **99.6 ms / +8 MB** |
-| scatter 10,000,000 | 222.1 ms / +9 MB | 1.53 s / +12 MB | 1.23 s / +379 MB | 1.55 s / +788 MB | fails | 5.11 s / +910 MB | **176.5 ms / +9 MB** |
-| hist 100,000,000 | 242.3 ms / +7 MB | 260.6 ms / +12 MB | 3.58 s / +1915 MB | 1.62 s / +1551 MB | 1.21 s / +1532 MB | 520.0 ms / +13 MB | **237.6 ms / +7 MB** |
+| line 10,000,000 | 126.8 ms / +8 MB | 491.9 ms / +315 MB | 330.8 ms / +389 MB | 2.78 s / +787 MB | fails | 597.0 ms / +1162 MB | **106.2 ms / +8 MB** |
+| scatter 10,000,000 | 236.4 ms / +9 MB | 1.64 s / +12 MB | 1.30 s / +377 MB | 1.61 s / +788 MB | fails | 5.16 s / +910 MB | **183.2 ms / +8 MB** |
+| hist 100,000,000 | 240.0 ms / +8 MB | 247.2 ms / +12 MB | 3.72 s / +1915 MB | 1.67 s / +1551 MB | 1.26 s / +1532 MB | 535.0 ms / +13 MB | **239.9 ms / +7 MB** |
 
 ## Real time (rolling window, one new point and a full redraw per frame)
 
@@ -30,57 +30,81 @@ Latency p50 / CPU time per frame / peak memory.
 
 | Library | p50 | CPU per frame | memory |
 |---|---:|---:|---:|
-| dataviz 1 thread | 0.74 ms | 0.73 ms | 8 MB |
-| dataviz all cores | 0.52 ms | 2.53 ms | 9 MB |
-| dataviz GPU | 0.83 ms | 0.43 ms | 238 MB |
-| plotters | 0.63 ms | 0.63 ms | 14 MB |
-| ruviz | 5.26 ms | 5.27 ms | 11 MB |
-| kuva | 5.21 ms | 5.20 ms | 27 MB |
-| charts-rs | 11.5 ms | 11.6 ms | 11 MB |
-| matplotlib | 9.98 ms | 9.97 ms | 74 MB |
+| dataviz 1 thread | 0.78 ms | 0.77 ms | 8 MB |
+| dataviz all cores | 0.50 ms | 2.60 ms | 9 MB |
+| dataviz GPU | 0.67 ms | 0.40 ms | 239 MB |
+| plotters | 0.65 ms | 0.63 ms | 14 MB |
+| ruviz | 5.33 ms | 5.33 ms | 11 MB |
+| kuva | 5.44 ms | 5.43 ms | 27 MB |
+| charts-rs | 12.0 ms | 12.1 ms | 11 MB |
+| matplotlib | 10.1 ms | 10.2 ms | 73 MB |
 
 **800x600 100,000 points**
 
 | Library | p50 | CPU per frame | memory |
 |---|---:|---:|---:|
-| dataviz 1 thread | 2.06 ms | 2.03 ms | 12 MB |
-| dataviz all cores | 1.81 ms | 4.50 ms | 14 MB |
-| dataviz GPU | 1.76 ms | 1.30 ms | 242 MB |
-| plotters | 5.39 ms | 5.43 ms | 16 MB |
-| ruviz | 30.8 ms | 30.8 ms | 17 MB |
-| kuva | 45.6 ms | 45.8 ms | 36 MB |
-| charts-rs | 921.2 ms | 924.0 ms | 137 MB |
-| matplotlib | 60.0 ms | 60.2 ms | 113 MB |
+| dataviz 1 thread | 2.15 ms | 2.13 ms | 12 MB |
+| dataviz all cores | 1.99 ms | 4.60 ms | 13 MB |
+| dataviz GPU | 1.73 ms | 1.30 ms | 243 MB |
+| plotters | 5.53 ms | 5.53 ms | 16 MB |
+| ruviz | 33.3 ms | 33.3 ms | 18 MB |
+| kuva | 47.5 ms | 47.5 ms | 36 MB |
+| charts-rs | 958.6 ms | 958.5 ms | 137 MB |
+| matplotlib | 61.4 ms | 61.5 ms | 112 MB |
 
 **1920x1080 1,000 points**
 
 | Library | p50 | CPU per frame | memory |
 |---|---:|---:|---:|
-| dataviz 1 thread | 1.60 ms | 1.63 ms | 16 MB |
-| dataviz all cores | 0.77 ms | 5.83 ms | 18 MB |
-| dataviz GPU | 1.71 ms | 1.37 ms | 244 MB |
-| plotters | 1.44 ms | 1.43 ms | 18 MB |
-| ruviz | 14.9 ms | 14.9 ms | 18 MB |
-| kuva | 17.3 ms | 17.3 ms | 33 MB |
-| charts-rs | 17.0 ms | 17.0 ms | 18 MB |
-| matplotlib | 12.0 ms | 12.0 ms | 80 MB |
+| dataviz 1 thread | 1.67 ms | 1.70 ms | 16 MB |
+| dataviz all cores | 0.82 ms | 5.87 ms | 18 MB |
+| dataviz GPU | 1.52 ms | 1.30 ms | 245 MB |
+| plotters | 1.48 ms | 1.50 ms | 18 MB |
+| ruviz | 17.4 ms | 17.4 ms | 18 MB |
+| kuva | 18.1 ms | 18.2 ms | 33 MB |
+| charts-rs | 17.5 ms | 17.5 ms | 18 MB |
+| matplotlib | 12.0 ms | 11.9 ms | 79 MB |
 
 **1920x1080 100,000 points**
 
 | Library | p50 | CPU per frame | memory |
 |---|---:|---:|---:|
-| dataviz 1 thread | 5.15 ms | 5.17 ms | 19 MB |
-| dataviz all cores | 3.14 ms | 14.1 ms | 21 MB |
-| dataviz GPU | 2.80 ms | 2.40 ms | 249 MB |
-| plotters | 8.15 ms | 8.17 ms | 21 MB |
-| ruviz | 119.5 ms | 119.5 ms | 28 MB |
-| kuva | 111.8 ms | 112.1 ms | 42 MB |
-| charts-rs | 1.10 s | 1.11 s | 137 MB |
-| matplotlib | 135.8 ms | 135.8 ms | 177 MB |
+| dataviz 1 thread | 5.37 ms | 5.40 ms | 19 MB |
+| dataviz all cores | 3.26 ms | 14.4 ms | 22 MB |
+| dataviz GPU | 2.82 ms | 2.50 ms | 250 MB |
+| plotters | 8.45 ms | 8.47 ms | 21 MB |
+| ruviz | 121.9 ms | 121.5 ms | 29 MB |
+| kuva | 117.8 ms | 117.8 ms | 42 MB |
+| charts-rs | 1.15 s | 1.15 s | 137 MB |
+| matplotlib | 139.3 ms | 140.1 ms | 177 MB |
 
 ## Animated GIF (800×600, 120 frames)
 
 | Scenario | dataviz | plotters | ruviz | matplotlib |
 |---|---:|---:|---:|---:|
-| moving sine wave (whole plot changes) | **252.0 ms, 1001 KB** | 1.08 s, 3227 KB | 2.93 s, 1741 KB | 5.90 s, 1119 KB |
-| growing line (fixed axes) | **81.0 ms, 38 KB** | 2.38 s, 3257 KB | 2.93 s, 1701 KB | 6.10 s, 420 KB |
+| moving sine wave (whole plot changes) | **301.0 ms, 1001 KB** | 995.0 ms, 3227 KB | 3.87 s, 1741 KB | 5.45 s, 1119 KB |
+| growing line (fixed axes) | **84.0 ms, 38 KB** | 2.98 s, 3257 KB | 4.00 s, 1701 KB | 6.53 s, 420 KB |
+
+## 3D charts (800×600 PNG; dataviz, plotters and matplotlib on one core)
+
+Time per image; a rotation frame is one frame of an interactive rotation (camera turned, image drawn again); the GIF has 90 frames.
+
+| Chart | dataviz | dataviz GPU | plotters | matplotlib | PyVista |
+|---|---:|---:|---:|---:|---:|
+| surface 60² | 6.03 ms | **5.58 ms** | 6.27 ms | 59.3 ms | 100.0 ms |
+| surface 200² | 30.5 ms | 50.7 ms | **23.6 ms** | 165.2 ms | 113.3 ms |
+| scatter 10,000 | 2.99 ms | **1.88 ms** | 3.56 ms | 108.2 ms | 95.3 ms |
+| scatter 1,000,000 | 148.8 ms | **110.8 ms** | 185.8 ms | 6.04 s | 122.6 ms |
+| line 100,000 (Lorenz) | 28.3 ms | 13.9 ms | **9.12 ms** | 64.0 ms | 91.7 ms |
+| molecule 1BNA (486 atoms) | 9.12 ms | 5.87 ms | **2.02 ms** | 40.7 ms | 85.6 ms |
+| rotation frame: surface 60² | 5.18 ms | 4.90 ms | 5.37 ms | 27.0 ms | **0.66 ms** |
+| rotation frame: molecule | 7.90 ms | 4.66 ms | 0.95 ms | 12.5 ms | **0.67 ms** |
+| GIF, 90 frames turning | **915.0 ms, 3649 KB** | 1.11 s, 3182 KB | 3.02 s, 4544 KB | 7.97 s, 5713 KB | 4.16 s, 3441 KB |
+
+Peak memory of the process:
+
+| Chart | dataviz | dataviz GPU | plotters | matplotlib | PyVista |
+|---|---:|---:|---:|---:|---:|
+| scatter 1,000,000 | 103 MB | 355 MB | **37 MB** | 620 MB | 348 MB |
+| molecule 1BNA (486 atoms) | **11 MB** | 252 MB | 14 MB | 116 MB | 287 MB |
+| surface 200² | 33 MB | 343 MB | **14 MB** | 161 MB | 299 MB |

@@ -6,7 +6,7 @@ and writes RESULTS.md (Markdown tables) and results.json.
     python3 run_all.py                 # everything (about 15 minutes)
     python3 run_all.py static realtime # some groups only
 
-Groups: static (small charts), bigdata, realtime, animation.
+Groups: static (small charts), bigdata, realtime, animation, threed.
 Times are medians; CPU is user + system time of the process; memory is the
 peak resident set (for big data: above what the data itself takes).
 """
@@ -30,6 +30,16 @@ MPL = [PY, os.path.join(HERE, "mpl_bench.py")] if os.path.exists(PY) else None
 LIBS = [("dataviz", "dataviz"), ("plotters", "plotters"), ("ruviz", "ruviz"), ("kuva", "kuva"), ("charts-rs", "charts_rs")]
 if MPL:
     LIBS.append(("matplotlib", "mpl"))
+
+
+# QUICK=1: two runs per measurement and about 0.5 s each (a few minutes per
+# group instead of about 20 for all; less steady numbers).
+QUICK = os.environ.get("QUICK") == "1"
+BUDGET_MS = 500 if QUICK else 2000
+
+
+def runs_of(n):
+    return min(n, 2) if QUICK else n
 
 
 # ONLY=matplotlib,plotters: measure only these libraries and keep the other
@@ -85,9 +95,9 @@ def static_chart(binary, scenario, n, reps, env=None, runs=5):
                 dict(env or {}, BENCH_REPS="2"), pin=single_threaded(binary, env))
     if probe:
         est = float(probe[0].split()[1])
-        reps = max(3, min(reps, int(2000 / max(est, 0.01))))
+        reps = max(3, min(reps, int(BUDGET_MS / max(est, 0.01))))
     rows = []
-    for _ in range(runs):
+    for _ in range(runs_of(runs)):
         r = run(command(binary, "static") + [scenario, str(n), "png", os.path.join(OUT, binary)],
                 dict(env or {}, BENCH_REPS=str(reps)), pin=single_threaded(binary, env))
         if r:
@@ -197,6 +207,66 @@ def group_animation():
     return res
 
 
+# ----- 3D ---------------------------------------------------------------------
+# PyVista renders with OpenGL: on hybrid laptops ask for the discrete GPU
+# (the one wgpu picks for dataviz's GPU backend).
+NV = {"__NV_PRIME_RENDER_OFFLOAD": "1", "__GLX_VENDOR_LIBRARY_NAME": "nvidia"}
+PDB = os.path.join(HERE, "..", "plot-biology-3d", "data", "1BNA.pdb")
+LIBS3D = [
+    ("dataviz", [os.path.join(BIN, "d3_dataviz")], {"BACKEND": "cpu"}, True),
+    ("dataviz GPU", [os.path.join(BIN, "d3_dataviz")], {"BACKEND": "gpu"}, False),
+    ("plotters", [os.path.join(BIN, "d3_plotters")], {}, True),
+]
+if MPL:
+    LIBS3D += [("matplotlib", [PY, os.path.join(HERE, "bench3d.py"), "mpl"], {}, True),
+               ("PyVista", [PY, os.path.join(HERE, "bench3d.py"), "pyvista"], NV, False)]
+SCEN3D = [("surface", 60, "surface 60²"), ("surface", 200, "surface 200²"), ("scatter3d", 10_000, "scatter 10,000"),
+          ("scatter3d", 1_000_000, "scatter 1,000,000"), ("line3d", 100_000, "line 100,000 (Lorenz)"),
+          ("molecule", 0, "molecule 1BNA (486 atoms)"), ("rotate_surface", 60, "rotation frame: surface 60²"),
+          ("rotate_molecule", 0, "rotation frame: molecule"), ("anim", 60, "GIF, 90 frames turning")]
+
+
+def chart3d(cmd, scenario, n, env, pin, reps, runs):
+    """Median warm time / CPU per image (ms), peak RSS (MB), like static_chart."""
+    out = os.path.join(OUT, "d3")
+    args = cmd + [scenario, str(n), "png", out]
+    env = dict(env, D3_PDB=PDB)
+    if scenario != "anim":
+        probe = run(args, dict(env, BENCH_REPS="2"), timeout=900, pin=pin)
+        if probe:
+            est = float(probe[0].split()[1])
+            reps = max(3, min(reps, int(BUDGET_MS / max(est, 0.01))))
+    rows = []
+    for _ in range(runs_of(runs)):
+        r = run(args, dict(env, BENCH_REPS=str(reps)), timeout=900, pin=pin)
+        if r:
+            f = list(map(float, r[0].split()))
+            rows.append((f[1], f[2], r[2]))
+    if not rows:
+        return None
+    rows.sort(key=lambda r: r[0])
+    warm, cpu, rss = rows[len(rows) // 2]
+    res = {"ms": warm, "cpu_ms": cpu, "rss_mb": rss}
+    if scenario == "anim" and os.path.exists(out + ".gif"):
+        res["kb"] = os.path.getsize(out + ".gif") // 1024
+    return res
+
+
+def group_threed():
+    res = {}
+    for scenario, n, label in SCEN3D:
+        res[label] = {}
+        for name, cmd, env, pin in LIBS3D:
+            if skip("threed", label, name):
+                res[label][name] = keep("threed", label, name)
+                continue
+            anim = scenario == "anim"
+            r = chart3d(cmd, scenario, n, env, pin, 1 if anim else 61, 3 if anim else 5)
+            res[label][name] = r
+            print(f"threed {label:28} {name:12} {r}", flush=True)
+    return res
+
+
 def machine():
     cpu = "?"
     try:
@@ -211,6 +281,8 @@ def machine():
         m = re.search(r'name = "%s"\nversion = "([^"]+)"' % re.escape(crate), lock)
         versions[crate] = m.group(1) if m else "?"
     if MPL:
+        versions["PyVista"] = subprocess.run(MPL[:1] + ["-c", "import pyvista; print(pyvista.__version__)"],
+                                             capture_output=True, text=True).stdout.strip()
         versions["matplotlib"] = subprocess.run(MPL[:1] + ["-c", "import matplotlib; print(matplotlib.__version__)"],
                                                 capture_output=True, text=True).stdout.strip()
     return {"cpu": cpu, "cores": os.cpu_count(), "gpu": gpu or "none", "os": platform.platform(), "versions": versions}
@@ -274,11 +346,35 @@ def markdown(results, info):
             label = {"wave": "moving sine wave (whole plot changes)", "stream": "growing line (fixed axes)"}[sc]
             lines.append(f"| {label} | " + " | ".join(best_row(cells, vals)) + " |")
         lines.append("")
+    if "threed" in results:
+        cols = [n for n, *_ in LIBS3D if any(n in r for r in results["threed"].values())]
+        lines += ["## 3D charts (800×600 PNG; dataviz, plotters and matplotlib on one core)\n",
+                  "Time per image; a rotation frame is one frame of an interactive rotation "
+                  "(camera turned, image drawn again); the GIF has 90 frames.\n",
+                  "| Chart | " + " | ".join(cols) + " |", "|---|" + "---:|" * len(cols)]
+        for k, row in results["threed"].items():
+            vals = [row[c]["ms"] if row.get(c) else None for c in cols]
+            cells = []
+            for c, v in zip(cols, vals):
+                r = row.get(c)
+                cell = fmt_ms(v)
+                if r and "kb" in r:
+                    cell += f", {r['kb']} KB"
+                cells.append(cell)
+            lines.append(f"| {k} | " + " | ".join(best_row(cells, vals)) + " |")
+        lines += ["", "Peak memory of the process:\n",
+                  "| Chart | " + " | ".join(cols) + " |", "|---|" + "---:|" * len(cols)]
+        for k in ["scatter 1,000,000", "molecule 1BNA (486 atoms)", "surface 200²"]:
+            row = results["threed"].get(k, {})
+            vals = [row[c]["rss_mb"] if row.get(c) else None for c in cols]
+            cells = [f"{v:.0f} MB" if v is not None else "fails" for v in vals]
+            lines.append(f"| {k} | " + " | ".join(best_row(cells, vals)) + " |")
+        lines.append("")
     return "\n".join(lines)
 
 
 def main():
-    groups = sys.argv[1:] or ["static", "bigdata", "realtime", "animation"]
+    groups = sys.argv[1:] or ["static", "bigdata", "realtime", "animation", "threed"]
     path = os.path.join(HERE, "results.json")
     results = json.load(open(path)) if os.path.exists(path) else {}
     PREV.update(results)
