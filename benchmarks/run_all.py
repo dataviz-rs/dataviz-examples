@@ -2,7 +2,6 @@
 """Runs every dataviz benchmark against plotters, ruviz, kuva and charts-rs
 and writes RESULTS.md (Markdown tables) and results.json.
 
-    RUST_FONTCONFIG_DLOPEN=1 cargo build --release
     python3 run_all.py                 # everything (about 15 minutes)
     python3 run_all.py static realtime # some groups only
 
@@ -373,7 +372,14 @@ def markdown(results, info):
     return "\n".join(lines)
 
 
+def build():
+    """Builds the benchmark binaries first, so a run never measures stale ones."""
+    subprocess.run(["cargo", "build", "--release", "-q"], cwd=HERE, check=True,
+                   env=dict(os.environ, RUST_FONTCONFIG_DLOPEN="1"))
+
+
 def main():
+    build()
     groups = sys.argv[1:] or ["static", "bigdata", "realtime", "animation", "threed"]
     path = os.path.join(HERE, "results.json")
     results = json.load(open(path)) if os.path.exists(path) else {}

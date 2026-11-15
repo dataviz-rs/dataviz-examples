@@ -18,8 +18,7 @@ Results of the last run: [RESULTS.md](RESULTS.md) (raw: `results.json`).
 ## Run
 
 ```sh
-# plotters needs fontconfig: install libfontconfig1-dev, or let it load at run time:
-RUST_FONTCONFIG_DLOPEN=1 cargo build --release
+# run_all.py builds the binaries first (fontconfig for plotters is loaded at run time).
 # matplotlib (optional; skipped without the virtualenv):
 python3 -m venv .venv && .venv/bin/pip install matplotlib numpy pillow pyvista imageio
 python3 run_all.py                  # all groups (about 20 minutes)
