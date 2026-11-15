@@ -406,9 +406,9 @@ checksum = "be1e0bca6c3637f992fc1cc7cbc52a78c1ef6db076dbf1059c4323d6a2048376"
 
 [[package]]
 name = "dataviz"
-version = "0.15.0"
+version = "0.16.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "37056f4a4c5beacd001c0350da74713eaf4b6db8562f1b7e92adf6fb1cd33307"
+checksum = "44e621b62a88e7fa4264801b64c4b97f022c82ba58d67f9ae614cc5b646a8be9"
 dependencies = [
  "ab_glyph",
  "gif 0.14.2",
