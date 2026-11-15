@@ -72,7 +72,7 @@ Linux needs the usual windowing libraries for the window examples, e.g.
 | [`plot-pie-donut`](plot-pie-donut) | Pie and donut charts | <img src="plot-pie-donut/screenshots/pie_donut.png" width="260"> |
 | [`plot-polar-radar`](plot-polar-radar) | Polar, radar and rose charts | <img src="plot-polar-radar/screenshots/polar_radar.png" width="260"> |
 | [`plot-treemap-sunburst`](plot-treemap-sunburst) | Treemap and sunburst | <img src="plot-treemap-sunburst/screenshots/treemap_sunburst.png" width="260"> |
-| [`plot-maps`](plot-maps) | World choropleth, routes, projections | <img src="plot-maps/screenshots/maps.png" width="260"> |
+| [`plot-maps`](plot-maps) | World choropleth, routes, projections; states and provinces, flow maps, hexbin density, OpenStreetMap basemap | <img src="plot-maps/screenshots/maps.png" width="260"> |
 | [`plot-sankey`](plot-sankey) | Sankey diagram | <img src="plot-sankey/screenshots/sankey.png" width="260"> |
 | [`plot-funnel-gauge`](plot-funnel-gauge) | Funnel and gauge | <img src="plot-funnel-gauge/screenshots/funnel_gauge.png" width="260"> |
 | [`plot-network`](plot-network) | Network graph | <img src="plot-network/screenshots/network.png" width="260"> |

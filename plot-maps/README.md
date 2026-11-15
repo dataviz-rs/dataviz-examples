@@ -11,6 +11,21 @@ value.
 
 <img src="./screenshots/projections.png" alt="Projections" width="800">
 
+<img src="./screenshots/regions.png" alt="Provinces of Türkiye, German states, flow map, hexbin density, OpenStreetMap basemap" width="900">
+
+States and provinces of any country (feature `regions`: Natural Earth
+1:10m admin-1, colored here by their area computed from the outlines), a
+flow map along great circles, a hexbin density map and OpenStreetMap tiles
+as a basemap (`cargo run --release -- --fetch-tiles` downloads the few
+tiles once into `tiles/`, following the OSM tile usage policy).
+
+```rust
+ax.region_map("TUR", [("TR-34", 15.7), ("TR-06", 5.8)]);   // ISO 3166-2 codes or names
+ax.geo_flows(&[(28.8, 41.0, -73.8, 40.6, 9.0)], &["IST–JFK"]);
+ax.geo_hexbin(&lon, &lat).gridsize(45);
+ax.basemap((28.9, 29.1), (40.98, 41.1), 12, tile_dir("tiles"), "© OpenStreetMap contributors");
+```
+
 ```rust
 ax.map(Projection::Robinson);
 ax.choropleth([("DEU", 83.2), ("TUR", 85.3), ("JP", 124.5), ("Brazil", 203.1)])

@@ -21,3 +21,6 @@ Cargo.lock
 #.idea/
 # Protein Data Bank structures used by the examples
 !plot-biology-3d/data/*.pdb
+
+# Map tiles downloaded by plot-maps --fetch-tiles
+plot-maps/tiles/
