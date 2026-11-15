@@ -4,6 +4,8 @@
 
 <img src="./screenshots/interactive.gif" alt="Interactive window and live data" width="400">
 
+<img src="./screenshots/interactive.png" alt="The interactive chart with its range slider" width="600">
+
 The animation was recorded with `cargo run --release -- --demo`: wheel zoom and drag through the same calls a window or GUI makes (`zoom_at`, `pan_by`, `reset_view`), the range slider following the view.
 
 ## Run

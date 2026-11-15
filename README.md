@@ -2,9 +2,13 @@
 
 Runnable examples for [dataviz](https://github.com/dataviz-rs/dataviz)
 ([crates.io](https://crates.io/crates/dataviz), [docs](https://docs.rs/dataviz)),
-a pure-Rust plotting library with 40+ chart types, SVG/PNG/JPEG/WebP/PDF
-output, interactive and live windows, terminal output and CPU / multi-core /
-GPU rendering. The examples always use the latest dataviz release.
+a pure-Rust plotting library with 120+ chart types — statistics, machine
+learning, finance and order flow, genomics, business charts, maps, 3D
+surfaces, molecules and isosurfaces — PNG/SVG/PDF/HTML output, interactive
+and live windows, animations, terminal output and CPU / multi-core / GPU
+rendering. The examples always use the latest dataviz release; the
+[benchmarks](benchmarks) compare it with plotters, ruviz, kuva, charts-rs,
+matplotlib and PyVista.
 
 ## Running an example
 
