@@ -2,7 +2,8 @@
 
 A world choropleth of population density (log colors, colorbar, graticule)
 with flight routes along great circles, and the world in the Robinson,
-Natural Earth, equirectangular and Mercator projections. The country
+Natural Earth, equal-area Equal Earth and Mollweide, equirectangular and
+Mercator projections. The country
 outlines, ISO codes, population and GDP come with dataviz (Natural Earth
 1:110m, public domain); hovering a country in a window shows its name and
 value.
@@ -10,6 +11,25 @@ value.
 <img src="./screenshots/maps.png" alt="Population density" width="800">
 
 <img src="./screenshots/projections.png" alt="Projections" width="800">
+
+## Globe
+
+`ax.globe(lon, lat)` shows the Earth from space (orthographic projection):
+the far side is cut away along the rim, maps, routes and points follow.
+`ax.globe_center(lon, lat)` turns it, so a spinning globe is a `record`
+loop.
+
+<img src="./screenshots/globe.png" alt="Population on two globes with the Istanbul–New York great circle" width="800">
+<img src="./screenshots/globe_spin.gif" alt="A spinning globe" width="300">
+
+```rust
+ax.globe(30.0, 35.0);
+ax.choropleth(population).log(true).graticule(30.0);
+ax.geo_line([28.98, -73.94], [41.01, 40.67]);           // great circle
+fig.record("globe_spin.gif", 20.0, 60, |f, k| {
+    f.axes().globe_center(k as f64 * 6.0, 20.0);
+})?;
+```
 
 <img src="./screenshots/regions.png" alt="Provinces of Türkiye, German states, flow map, hexbin density, OpenStreetMap basemap" width="900">
 

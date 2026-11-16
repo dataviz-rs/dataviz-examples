@@ -15,6 +15,24 @@ ax.ellipsoid([0.0, 0.0, 0.0], [3.2, 2.2, 1.7]).opacity(0.2);
 ax.camera(-60.0, 30.0).rotate(Axis3::X, 20.0).perspective(0.4);
 ```
 
+## Volume rendering
+
+A 3D grid of values (densities, CT/MRI scans, simulation fields) seen
+through: rays cast through the grid for every pixel, low values
+transparent, higher ones glowing in the colormap — or the maximum along
+each ray (maximum intensity projection). A 96³ grid draws in about 60 ms.
+
+<img src="./screenshots/volume.png" alt="Volume rendering and maximum intensity projection" width="900">
+
+```rust
+ax.volume(values, [nx, ny, nz])            // values[x + nx·(y + ny·z)]
+    .extent((-1.0, 1.0), (-1.0, 1.0), (-1.0, 1.0))
+    .opacity(0.35)
+    .threshold(0.1)
+    .colorbar("density");
+ax.volume(values, dims).mode(VolumeMode::MaxIntensity);
+```
+
 ## Turning the scene
 
 The camera turns freely around the x, y and z axes (a rotation matrix, no

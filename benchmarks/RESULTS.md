@@ -1,7 +1,7 @@
 # dataviz benchmarks
 
 Intel(R) Core(TM) Ultra 7 255HX (20 threads), GPU: NVIDIA GeForce RTX 5070 Ti Laptop GPU, Linux-7.0.0-38-generic-x86_64-with-glibc2.39.  
-Versions: dataviz 0.17.0, plotters 0.3.7, ruviz 0.15.2, kuva 0.6.0, charts-rs 2.3.0, PyVista 0.49.2, matplotlib 3.11.2.
+Versions: dataviz 0.18.0, plotters 0.3.7, ruviz 0.15.2, kuva 0.6.0, charts-rs 2.3.0, PyVista 0.49.2, matplotlib 3.11.2.
 
 ## Static charts (800×600 PNG, one thread, time per chart)
 
@@ -91,20 +91,20 @@ Time per image; a rotation frame is one frame of an interactive rotation (camera
 
 | Chart | dataviz | dataviz GPU | plotters | matplotlib | PyVista |
 |---|---:|---:|---:|---:|---:|
-| surface 60² | 6.09 ms | **2.02 ms** | 6.21 ms | 58.7 ms | 98.0 ms |
-| surface 200² | 30.6 ms | **5.22 ms** | 21.7 ms | 149.7 ms | 104.5 ms |
-| scatter 10,000 | 2.77 ms | **2.50 ms** | 3.21 ms | 97.8 ms | 90.7 ms |
-| scatter 1,000,000 | 139.8 ms | 125.2 ms | 171.1 ms | 5.76 s | **121.3 ms** |
-| line 100,000 (Lorenz) | 9.87 ms | 14.7 ms | **8.57 ms** | 60.5 ms | 89.4 ms |
-| molecule 1BNA (486 atoms) | 3.39 ms | 2.34 ms | **1.93 ms** | 38.3 ms | 84.6 ms |
-| rotation frame: surface 60² | 5.14 ms | **0.49 ms** | 5.01 ms | 25.2 ms | 0.58 ms |
-| rotation frame: molecule | 2.16 ms | 0.88 ms | 0.88 ms | 11.5 ms | **0.63 ms** |
-| GIF, 90 frames turning | 900.9 ms, 3949 KB | **701.9 ms, 3453 KB** | 2.83 s, 4544 KB | 7.43 s, 5713 KB | 4.17 s, 3441 KB |
+| surface 60² | 6.36 ms | **2.39 ms** | 5.93 ms | 56.3 ms | 93.2 ms |
+| surface 200² | 29.4 ms | **5.28 ms** | 21.2 ms | 142.5 ms | 100.0 ms |
+| scatter 10,000 | 2.74 ms | **2.15 ms** | 3.19 ms | 94.9 ms | 86.1 ms |
+| scatter 1,000,000 | 138.5 ms | **39.5 ms** | 169.0 ms | 5.61 s | 118.3 ms |
+| line 100,000 (Lorenz) | 9.75 ms | **3.93 ms** | 8.47 ms | 59.0 ms | 85.1 ms |
+| molecule 1BNA (486 atoms) | 3.38 ms | 2.05 ms | **1.92 ms** | 37.6 ms | 81.5 ms |
+| rotation frame: surface 60² | 5.09 ms | **0.48 ms** | 5.00 ms | 24.9 ms | 0.53 ms |
+| rotation frame: molecule | 2.12 ms | **0.45 ms** | 0.89 ms | 11.4 ms | 0.58 ms |
+| GIF, 90 frames turning | 886.7 ms, 3949 KB | **740.1 ms, 3453 KB** | 2.79 s, 4544 KB | 7.34 s, 5713 KB | 4.05 s, 3441 KB |
 
 Peak memory of the process:
 
 | Chart | dataviz | dataviz GPU | plotters | matplotlib | PyVista |
 |---|---:|---:|---:|---:|---:|
-| scatter 1,000,000 | 103 MB | 334 MB | **36 MB** | 620 MB | 345 MB |
-| molecule 1BNA (486 atoms) | **10 MB** | 224 MB | 14 MB | 116 MB | 285 MB |
-| surface 200² | 35 MB | 234 MB | **14 MB** | 159 MB | 297 MB |
+| scatter 1,000,000 | 103 MB | 300 MB | **37 MB** | 620 MB | 345 MB |
+| molecule 1BNA (486 atoms) | **11 MB** | 224 MB | 14 MB | 115 MB | 285 MB |
+| surface 200² | 33 MB | 235 MB | **14 MB** | 160 MB | 297 MB |

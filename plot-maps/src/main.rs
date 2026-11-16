@@ -55,12 +55,15 @@ fn main() -> Result<(), Error> {
     fig.save("maps.png")?;
     fig.save("maps.svg")?;
 
-    // The same map in four projections.
-    let mut fig = Figure::new(1100, 640);
-    fig.grid(2, 2);
+    // The same map in six projections (Equal Earth and Mollweide keep
+    // areas true).
+    let mut fig = Figure::new(1100, 900);
+    fig.grid(3, 2);
     for (i, p) in [
         Projection::Robinson,
         Projection::NaturalEarth,
+        Projection::EqualEarth,
+        Projection::Mollweide,
         Projection::Equirectangular,
         Projection::Mercator,
     ]
@@ -73,8 +76,40 @@ fn main() -> Result<(), Error> {
         ax.world_map().graticule(30.0);
     }
     fig.save("projections.png")?;
+    globe()?;
     regions()?;
     Ok(())
+}
+
+/// The globe: population on the side facing Istanbul, a flight to New York
+/// along the great circle, and a spinning globe as a GIF.
+fn globe() -> Result<(), Error> {
+    let population = [
+        ("CHN", 1412.0), ("IND", 1408.0), ("USA", 333.0), ("IDN", 276.0), ("PAK", 236.0),
+        ("NGA", 218.0), ("BRA", 215.0), ("BGD", 171.0), ("RUS", 144.0), ("MEX", 127.0),
+        ("ETH", 123.0), ("JPN", 125.0), ("EGY", 111.0), ("PHL", 115.0), ("COD", 99.0),
+        ("VNM", 98.0), ("IRN", 88.0), ("TUR", 85.0), ("DEU", 83.0), ("THA", 72.0),
+        ("GBR", 67.0), ("FRA", 68.0), ("ITA", 59.0), ("ZAF", 60.0), ("KEN", 54.0),
+    ];
+    let mut fig = Figure::new(1100, 560);
+    fig.grid(1, 2);
+    for (i, (lon, lat)) in [(30.0, 35.0), (-75.0, 25.0)].into_iter().enumerate() {
+        let ax = fig.at(0, i);
+        ax.title(format!("Globe over {lon}°, {lat}°")).globe(lon, lat);
+        let m = ax.choropleth(population).log(true).graticule(30.0);
+        if i == 1 {
+            m.colorbar("population (millions)");
+        }
+        ax.geo_line([28.98, -73.94], [41.01, 40.67]).color("#d62728").width(2.5);
+        ax.geo_scatter([28.98, -73.94], [41.01, 40.67]).color("#d62728").size(8.0);
+    }
+    fig.save("globe.png")?;
+
+    let mut fig = Figure::new(420, 420);
+    fig.axes().globe(0.0, 20.0).world_map().graticule(30.0);
+    fig.record("globe_spin.gif", 20.0, 60, |f, k| {
+        f.axes().globe_center(k as f64 * 6.0, 20.0);
+    })
 }
 
 /// States and provinces, flows, hexbin density and a tile basemap.

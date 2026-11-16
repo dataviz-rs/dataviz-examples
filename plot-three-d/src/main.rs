@@ -57,8 +57,44 @@ fn main() -> Result<(), Error> {
 
     fig.save("three_d.png")?;
     fig.save("three_d.svg")?;
+    volume()?;
     if std::env::args().any(|a| a == "--window") {
         fig.show("dataviz 3D: drag = turn, wheel = zoom, X/Y/Z = rotate, R = reset")?;
     }
     Ok(())
+}
+
+/// Volume rendering of an electron-density-like field (two lobes and a
+/// ring on a 96³ grid): translucent cloud and maximum intensity projection.
+fn volume() -> Result<(), Error> {
+    let n = 96;
+    let mut v = Vec::with_capacity(n * n * n);
+    for k in 0..n {
+        for j in 0..n {
+            for i in 0..n {
+                let c = |a: usize| a as f64 / (n - 1) as f64 * 2.0 - 1.0;
+                let (x, y, z) = (c(i), c(j), c(k));
+                let lobe = |dz: f64| (-((x * x + y * y) * 9.0 + (z - dz) * (z - dz) * 14.0)).exp();
+                let ring = (-(((x * x + y * y).sqrt() - 0.62).powi(2) * 40.0 + z * z * 30.0)).exp() * 0.8;
+                v.push(lobe(0.45) + lobe(-0.45) + ring);
+            }
+        }
+    }
+    let mut fig = Figure::new(1200, 560);
+    fig.grid(1, 2);
+    let ax = fig.at(0, 0);
+    ax.title("Volume rendering");
+    ax.volume(v.clone(), [n, n, n])
+        .extent((-1.0, 1.0), (-1.0, 1.0), (-1.0, 1.0))
+        .opacity(0.35)
+        .colorbar("density");
+    let ax = fig.at(0, 1);
+    ax.title("Maximum intensity projection");
+    ax.volume(v, [n, n, n])
+        .extent((-1.0, 1.0), (-1.0, 1.0), (-1.0, 1.0))
+        .mode(VolumeMode::MaxIntensity)
+        .colormap(Colormap::Viridis);
+    // Seen from lower down: the lobes along z come apart.
+    ax.camera(30.0, 10.0);
+    fig.save("volume.png")
 }
