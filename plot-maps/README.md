@@ -3,7 +3,7 @@
 A world choropleth of population density (log colors, colorbar, graticule)
 with flight routes along great circles, and the world in the Robinson,
 Natural Earth, equal-area Equal Earth and Mollweide, equirectangular and
-Mercator projections. The country
+Mercator projections, conic maps of countries and polar maps. The country
 outlines, ISO codes, population and GDP come with dataviz (Natural Earth
 1:110m, public domain); hovering a country in a window shows its name and
 value.
@@ -11,6 +11,24 @@ value.
 <img src="./screenshots/maps.png" alt="Population density" width="800">
 
 <img src="./screenshots/projections.png" alt="Projections" width="800">
+
+## Conic and polar maps
+
+Countries and continents on conic projections: Albers equal-area for the
+USA (`Projection::USA`) and Lambert conformal for Europe
+(`Projection::EUROPE`), each framed with `map_bounds`. The poles are shown
+in the stereographic and Lambert azimuthal equal-area projections. Shapes
+that cross the meridian opposite the map's centre are cut there, and long
+edges are drawn as curves.
+
+<img src="./screenshots/conic_polar.png" alt="USA in Albers, Europe in Lambert conformal conic, the Arctic stereographic and Antarctica in azimuthal equal-area" width="900">
+
+```rust
+ax.map(Projection::USA);
+ax.choropleth(density).log(true);
+ax.map_bounds((-126.0, -66.0), (23.0, 50.0));
+ax.map(Projection::Stereographic { lon: 0.0, lat: 90.0 });   // the Arctic
+```
 
 ## Globe
 
@@ -67,7 +85,7 @@ cd dataviz-examples/plot-maps
 cargo run --release
 ```
 
-Writes `maps.png`, `maps.svg` and `projections.png`. See
+Writes `maps.png`, `maps.svg`, `projections.png`, `conic_polar.png`, `globe.png`, `globe_spin.gif` and `regions.png`. See
 [`src/main.rs`](src/main.rs) for the code.
 
 ## License

@@ -36,7 +36,7 @@ fn main() -> Result<(), Error> {
     fig.title("Population density and flight routes");
     let ax = fig.axes();
     ax.map(Projection::Robinson);
-    ax.choropleth(density)
+    ax.choropleth(density.clone())
         .log(true)
         .colormap(Colormap::Magma)
         .graticule(30.0)
@@ -76,9 +76,37 @@ fn main() -> Result<(), Error> {
         ax.world_map().graticule(30.0);
     }
     fig.save("projections.png")?;
+    conic_and_polar(&density)?;
     globe()?;
     regions()?;
     Ok(())
+}
+
+/// Countries and continents on conic maps (Albers equal-area for the
+/// USA, Lambert conformal for Europe) and the poles on azimuthal maps.
+fn conic_and_polar(density: &[(String, f64)]) -> Result<(), Error> {
+    let mut fig = Figure::new(1100, 900);
+    fig.title("Conic and polar projections");
+    fig.grid(2, 2);
+    let views = [
+        ("USA: Albers equal-area conic", Projection::USA, Some(((-126.0, -66.0), (23.0, 50.0)))),
+        ("Europe: Lambert conformal conic", Projection::EUROPE, Some(((-12.0, 42.0), (34.0, 71.0)))),
+        ("Arctic: stereographic", Projection::Stereographic { lon: 0.0, lat: 90.0 }, None),
+        ("Antarctica: azimuthal equal-area", Projection::AzimuthalEqualArea { lon: 0.0, lat: -90.0 }, None),
+    ];
+    for (i, (title, p, bounds)) in views.into_iter().enumerate() {
+        let ax = fig.at(i / 2, i % 2);
+        ax.title(title);
+        ax.map(p);
+        let m = ax.choropleth(density.to_vec()).log(true).colormap(Colormap::Magma).graticule(15.0);
+        if i == 1 {
+            m.colorbar("people per km²");
+        }
+        if let Some((lon, lat)) = bounds {
+            ax.map_bounds(lon, lat);
+        }
+    }
+    fig.save("conic_polar.png")
 }
 
 /// The globe: population on the side facing Istanbul, a flight to New York

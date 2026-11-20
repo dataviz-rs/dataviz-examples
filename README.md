@@ -25,7 +25,7 @@ the `screenshots/` folder of each example contains that output. The
 font is built into dataviz.
 
 The repository is a Cargo workspace, so `cargo build --workspace` builds all
-of them at once.
+of them at once. `plot-c-cpp` is built with CMake instead (see its README).
 
 Linux needs the usual windowing libraries for the window examples, e.g.
 `sudo apt-get install libxkbcommon-dev libwayland-dev`.
@@ -60,6 +60,7 @@ Linux needs the usual windowing libraries for the window examples, e.g.
 | [`plot-data-science`](plot-data-science) | ROC, PR, confusion matrix, regression, density, dendrogram; SHAP, calibration, learning curve, gain, raincloud, UpSet | <img src="plot-data-science/screenshots/evaluation.png" width="260"> |
 | [`plot-engineering`](plot-engineering) | FFT spectrum, spectrogram, Bode, Nyquist, Smith chart; streamlines, ternary, 3D waterfall, SPC control chart, Pareto, 3D vectors and bars | <img src="plot-engineering/screenshots/engineering.png" width="260"> |
 | [`plot-trading`](plot-trading) | Ichimoku, VWAP, volume profile, depth, stochastic, ATR, drawdown, Renko; liquidity heatmap, footprint, market profile, option payoff, volatility surface | <img src="plot-trading/screenshots/trading.png" width="260"> |
+| [`plot-drawing-tools`](plot-drawing-tools) | Trend lines, rays, price levels, Fibonacci retracements; drawn with T/L/F in a window | <img src="plot-drawing-tools/screenshots/drawing_tools.png" width="260"> |
 | [`plot-candlestick`](plot-candlestick) | Candlestick chart | <img src="plot-candlestick/screenshots/candlestick.png" width="260"> |
 | [`plot-indicators`](plot-indicators) | Bollinger bands, RSI, MACD, Heikin-Ashi | <img src="plot-indicators/screenshots/indicators.png" width="260"> |
 | [`plot-time-series`](plot-time-series) | Time series | <img src="plot-time-series/screenshots/time_series.png" width="260"> |
@@ -72,11 +73,13 @@ Linux needs the usual windowing libraries for the window examples, e.g.
 | [`plot-pie-donut`](plot-pie-donut) | Pie and donut charts | <img src="plot-pie-donut/screenshots/pie_donut.png" width="260"> |
 | [`plot-polar-radar`](plot-polar-radar) | Polar, radar and rose charts | <img src="plot-polar-radar/screenshots/polar_radar.png" width="260"> |
 | [`plot-treemap-sunburst`](plot-treemap-sunburst) | Treemap and sunburst | <img src="plot-treemap-sunburst/screenshots/treemap_sunburst.png" width="260"> |
-| [`plot-maps`](plot-maps) | World choropleth, routes, projections; states and provinces, flow maps, hexbin density, OpenStreetMap basemap | <img src="plot-maps/screenshots/maps.png" width="260"> |
+| [`plot-maps`](plot-maps) | World choropleth, routes, projections (conic, polar, globe); states and provinces, flow maps, hexbin density, OpenStreetMap basemap | <img src="plot-maps/screenshots/maps.png" width="260"> |
 | [`plot-sankey`](plot-sankey) | Sankey diagram | <img src="plot-sankey/screenshots/sankey.png" width="260"> |
 | [`plot-funnel-gauge`](plot-funnel-gauge) | Funnel and gauge | <img src="plot-funnel-gauge/screenshots/funnel_gauge.png" width="260"> |
 | [`plot-network`](plot-network) | Network graph | <img src="plot-network/screenshots/network.png" width="260"> |
 | [`plot-parallel-calendar`](plot-parallel-calendar) | Parallel coordinates and calendar heatmap | <img src="plot-parallel-calendar/screenshots/parallel_calendar.png" width="260"> |
+| [`plot-grammar`](plot-grammar) | Grammar of graphics: data + mark + encodings (Vega-Lite / ggplot style), aggregation, facets | <img src="plot-grammar/screenshots/grammar.png" width="260"> |
+| [`plot-volume-files`](plot-volume-files) | NIfTI and DICOM scans as lit volume renderings (also VTK, MetaImage) | <img src="plot-volume-files/screenshots/volume_files.png" width="260"> |
 | [`plot-three-d`](plot-three-d) | 3D surface, Lorenz trajectory, scatter in a mesh; drag/X/Y/Z to rotate | <img src="plot-three-d/screenshots/three_d.png" width="260"> |
 | [`plot-subplots-shared`](plot-subplots-shared) | Subplots with a shared x-axis | <img src="plot-subplots-shared/screenshots/subplots_shared.png" width="260"> |
 | [`plot-annotations`](plot-annotations) | Annotations | <img src="plot-annotations/screenshots/annotations.png" width="260"> |
@@ -85,11 +88,12 @@ Linux needs the usual windowing libraries for the window examples, e.g.
 | [`plot-interactive`](plot-interactive) | Interactive window (zoom, pan, hover) and live data | <img src="plot-interactive/screenshots/interactive.gif" width="260"> |
 | [`plot-egui`](plot-egui) | Embedded in an egui app: texture + zoom/pan/hover API | <img src="plot-egui/screenshots/egui.png" width="260"> |
 | [`plot-html`](plot-html) | Interactive HTML: hover, crosshair, legend toggle | <img src="plot-html/screenshots/html.png" width="260"> |
+| [`plot-c-cpp`](plot-c-cpp) | From C and C++ with CMake: a dashboard and a live window | <img src="plot-c-cpp/screenshots/dashboard.png" width="260"> |
 | [`plot-wasm`](plot-wasm) | In the browser: Rust → WebAssembly, streaming, zoom, hover | <img src="plot-wasm/screenshots/wasm.png" width="260"> |
 | [`plot-accessibility`](plot-accessibility) | Alt text, color vision simulation and checks | <img src="plot-accessibility/screenshots/risky.png" width="260"> |
 | [`plot-international`](plot-international) | Text in any language: CJK, Arabic, Hebrew, Hindi, Thai, emoji | <img src="plot-international/screenshots/international.png" width="260"> |
 | [`plot-math`](plot-math) | Math notation in labels, legends and annotations | <img src="plot-math/screenshots/math.png" width="260"> |
-| [`plot-animation`](plot-animation) | Animations: GIF and animated PNG | <img src="plot-animation/screenshots/animation.gif" width="260"> |
+| [`plot-animation`](plot-animation) | Animations: GIF, animated PNG and animated WebP | <img src="plot-animation/screenshots/animation.gif" width="260"> |
 | [`plot-streaming`](plot-streaming) | Live dashboard for streaming data (simulated sensors, CPU/memory, stdin) | <img src="plot-streaming/screenshots/streaming.gif" width="260"> |
 | [`plot-binance`](plot-binance) | Live Binance BTC/USDT dashboard: candles, volume, trades, order book, buy/sell pressure | <img src="plot-binance/screenshots/binance.png" width="260"> |
 | [`plot-terminal`](plot-terminal) | Charts in the terminal (half blocks / braille) | <img src="plot-terminal/screenshots/terminal.png" width="260"> |

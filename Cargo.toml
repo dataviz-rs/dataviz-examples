@@ -15,6 +15,7 @@ members = [
     "plot-business",
     "plot-candlestick",
     "plot-contour",
+    "plot-drawing-tools",
     "plot-data-science",
     "plot-distributions",
     "plot-egui",
@@ -24,6 +25,7 @@ members = [
     "plot-formats",
     "plot-funnel-gauge",
     "plot-gantt",
+    "plot-grammar",
     "plot-heatmap",
     "plot-hist2d-hexbin",
     "plot-histograms",
@@ -54,6 +56,7 @@ members = [
     "plot-time-series",
     "plot-trading",
     "plot-treemap-sunburst",
+    "plot-volume-files",
     "plot-wasm",
 ]
 

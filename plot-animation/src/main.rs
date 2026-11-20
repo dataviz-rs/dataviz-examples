@@ -1,5 +1,6 @@
 //! Animations: a travelling wave packet and its phase portrait recorded as a
-//! GIF and as a lossless animated PNG with `Figure::record`.
+//! GIF, a lossless animated PNG and a lossless animated WebP with
+//! `Figure::record`.
 //!
 //! `animation.mp4` / `.webm` work the same way when `ffmpeg` is installed.
 
@@ -44,7 +45,7 @@ fn frame(fig: &mut Figure, i: usize) {
 
 fn main() -> Result<(), Error> {
     let mut fig = Figure::new(820, 520);
-    for path in ["animation.gif", "animation.png"] {
+    for path in ["animation.gif", "animation.png", "animation.webp"] {
         let start = std::time::Instant::now();
         fig.record(path, 30.0, FRAMES, frame)?;
         let kb = std::fs::metadata(path).map(|m| m.len() / 1024).unwrap_or(0);

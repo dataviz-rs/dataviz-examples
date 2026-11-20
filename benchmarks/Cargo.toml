@@ -8,7 +8,7 @@ publish = false
 [workspace]
 
 [dependencies]
-dataviz = { version = "0.18", default-features = false, features = ["gpu"] }
+dataviz = { version = "0.19", default-features = false, features = ["gpu"] }
 plotters = "0.3.7"
 charts-rs = { version = "2.3", features = ["png"] }
 kuva = { version = "0.6", features = ["png"] }

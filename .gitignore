@@ -24,3 +24,8 @@ Cargo.lock
 
 # Map tiles downloaded by plot-maps --fetch-tiles
 plot-maps/tiles/
+
+# Files the examples write next to themselves
+plot-animation/animation.*
+plot-volume-files/out/
+plot-*/screenshots/out/
