@@ -1,5 +1,5 @@
 # dataviz from C and C++: CMake fetches the dataviz repository (tag
-# c-v0.19.1) and builds its C library with cargo.
+# c-v1.0.0) and builds its C library with cargo.
 #
 #   cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 #   cmake --build build --config Release
@@ -13,7 +13,7 @@ project(dataviz_c_cpp_example LANGUAGES C CXX)
 include(FetchContent)
 FetchContent_Declare(dataviz
   GIT_REPOSITORY https://github.com/dataviz-rs/dataviz.git
-  GIT_TAG c-v0.19.1
+  GIT_TAG c-v1.0.0
   GIT_SHALLOW TRUE
   SOURCE_SUBDIR capi)
 FetchContent_MakeAvailable(dataviz)
