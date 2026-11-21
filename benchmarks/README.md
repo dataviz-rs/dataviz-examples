@@ -49,3 +49,5 @@ python3 -m venv pyenv && pyenv/bin/pip install dataviz-rs matplotlib numpy
 pyenv/bin/python pyplot_bench.py mpl
 pyenv/bin/python pyplot_bench.py dv
 ```
+
+![dataviz.pyplot vs matplotlib](pyplot_bench.png)
