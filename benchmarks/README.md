@@ -38,3 +38,14 @@ renders off screen with one plotter per saved image and reads each rotation
 frame back (`screenshot`), like dataviz drawing into pixels. On laptops with
 two GPUs PyVista is asked for the discrete one (`__NV_PRIME_RENDER_OFFLOAD`),
 the GPU dataviz's GPU backend uses.
+
+`pyplot_bench.py` compares `dataviz.pyplot` with `matplotlib.pyplot` on the
+same two scripts (a 4-panel figure and a 1 M point line). Imports are timed
+separately; first calls and warm medians are printed apart, so start-up
+costs are not counted as rendering:
+
+```sh
+python3 -m venv pyenv && pyenv/bin/pip install dataviz-rs matplotlib numpy
+pyenv/bin/python pyplot_bench.py mpl
+pyenv/bin/python pyplot_bench.py dv
+```
